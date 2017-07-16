@@ -1,51 +1,73 @@
-
 import React, { Component } from 'react';
-import NavigationDrawer from 'react-md/lib/NavigationDrawers';
-import NavItems from './constants/navigation'
-import logo from './logo-mini.svg';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppTheme from './constants/DesignApp.js';
+import AppBar from 'material-ui/AppBar';
+import LeftMenu from './components/LeftMenu';
+import NavItems from './constants/LeftNavigationItems';
+import { Route } from 'react-router-dom';
 import './App.css';
+
+const Elements = () =>
+  <div>
+    <h2>Elements</h2>
+  </div>;
+
+const Timelines = () =>
+  <div>
+    <h2>Timelines</h2>
+  </div>;
+
+const Schedule = () =>
+  <div>
+    <h2>Schedule</h2>
+  </div>;
+
+const Television = () =>
+  <div>
+    <h2>Television</h2>
+  </div>;
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { key: NavItems[0].key }
-    this._setActive = this._setActive.bind(this);
-    this._navItems = NavItems.map(item => {
-      if (!item.divider) {
-        item.onClick = () => this._setActive(item.key);
-      }
-      return item;
-    });
+    this.state = { open: false };
   }
 
-  _setActive(key) {
-    this._navItems = this._navItems.map(item => {
-      if (!item.divider) {
-        item.active = item.key === key;
-      }
-      return item;
-    });
-
-    this.setState({ key });
-  }
+  handleToggle = () => this.setState({ open: !this.state.open });
 
   render() {
+    const contentStyle = {
+      marginLeft: 80,
+      transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)',
+    };
+
+    if (this.state.open) {
+      contentStyle.marginLeft = 210;
+    }
+
     return (
-      <NavigationDrawer
-        drawerHeaderChildren={<img src={logo} className="App-logo" alt="logo" />}
-        toolbarTitle="Etix TV Manager"
-        navItems={this._navItems}
-        mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY_MINI}
-        tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
-        desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
-        // toolbarProminentTitle
-        contentId="main-layout"
-      >
-        <div key="pouet" className="App">
-          Here the content will be.
+      <MuiThemeProvider muiTheme={AppTheme}>
+        <div>
+          {/* TOP BAR */}
+          <AppBar
+            title="Etix TV Manager"
+            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            onLeftIconButtonTouchTap={this.handleToggle}
+          />
+
+          {/* LEFT MENU */}
+          <LeftMenu open={this.state.open} menuItems={NavItems} />
+
+          {/* MAIN CONTENT */}
+          <div style={contentStyle}>
+            <Route exact path="/" component={Elements} />
+            <Route path="/timelines" component={Timelines} />
+            <Route path="/schedule" component={Schedule} />
+            <Route path="/tv" component={Television} />
+          </div>
         </div>
-      </NavigationDrawer>
+      </MuiThemeProvider>
     );
   }
 }
