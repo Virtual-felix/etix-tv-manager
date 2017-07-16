@@ -1,6 +1,6 @@
 # Etix TV Manager Admin Panel
 
-Here is the WebApp Admin Panel of the platform. It is developed with `React` and use `react-md` as css framework.
+Here is the WebApp Admin Panel of the platform. It is developed with `React` and use `material-ui` as css framework.
 
 To install it properly, run `npm install`.
 
