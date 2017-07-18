@@ -32,6 +32,16 @@ class App extends Component {
     super(props);
 
     this.state = { open: false };
+
+    // Request example, will be used in each components in their context.
+    window.httpClient
+      .get('/')
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   handleToggle = () => this.setState({ open: !this.state.open });
