@@ -4,12 +4,13 @@ import AppTheme from './constants/DesignApp.js';
 import AppBar from 'material-ui/AppBar';
 import LeftMenu from './components/LeftMenu';
 import NavItems from './constants/LeftNavigationItems';
+import UploadArea from './components/elements/UploadArea';
 import { Route } from 'react-router-dom';
 import './App.css';
 
 const Elements = () =>
   <div>
-    <h2>Elements</h2>
+    <UploadArea />
   </div>;
 
 const Timelines = () =>
@@ -32,28 +33,18 @@ class App extends Component {
     super(props);
 
     this.state = { open: false };
-
-    // Request example, will be used in each components in their context.
-    window.httpClient
-      .get('/')
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
   }
 
   handleToggle = () => this.setState({ open: !this.state.open });
 
   render() {
     const contentStyle = {
-      marginLeft: 80,
+      marginLeft: 70,
       transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)',
     };
 
     if (this.state.open) {
-      contentStyle.marginLeft = 210;
+      contentStyle.marginLeft = 200;
     }
 
     return (
