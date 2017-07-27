@@ -2,13 +2,14 @@ package s3
 
 import (
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/minio/minio-go"
 )
 
 const (
-	s3location = "eu-west"
+	s3location = "us-east-1"
 	bucketName = "media"
 )
 
@@ -66,9 +67,12 @@ func GetObject(name string) (*minio.Object, error) {
 	return object, nil
 }
 
-// NOTE: Need more insight on how the upload between front and API will work before doing this.
-
 // Upload is used to upload a file.
-func Upload(name, content string) {
-	//
+func Upload(name string, file io.Reader) error {
+	_, err := client.PutObject(bucketName, name, file, "application/octet-stream")
+	if err != nil {
+		log.Println("S3 operation: can't upload file [", name, "]: ", err)
+		return err
+	}
+	return nil
 }
