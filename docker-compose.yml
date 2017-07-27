@@ -26,11 +26,12 @@ services:
   s3:
     image: minio/minio
     ports:
-      - "9000:9000"
+      - "9001:9000"
     volumes:
       - ./s3/data:/export
       - ./s3/config:/root/.minio
     environment:
       - "MINIO_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT"
       - "MINIO_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
+      # - MINIO_REGION="luxembourg"
     command: server /export

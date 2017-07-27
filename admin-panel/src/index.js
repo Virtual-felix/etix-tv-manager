@@ -9,8 +9,7 @@ import './index.css';
 
 // Initialize the request client.
 window.httpClient = Axios.create({
-  baseURL: 'http://127.0.0.1:4242',
-  timeout: 1000,
+  baseURL: 'http://127.0.0.1:4244',
 });
 
 // Needed for onTouchTap

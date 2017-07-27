@@ -14,7 +14,7 @@ func main() {
 	e := echo.New()
 
 	// Services initialization
-	if err := s3.Init("172.17.0.1:9000", "HS4SFCA35UZHNW3YBHOT", "k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH", false); err != nil {
+	if err := s3.Init("172.19.0.1:9001", "HS4SFCA35UZHNW3YBHOT", "k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH", false); err != nil {
 		log.Println("Error during s3 initialization: ", err)
 	}
 
@@ -23,6 +23,7 @@ func main() {
 
 	// Routes descriptions
 	e.GET("/", controller.HelloWorld)
+	e.POST("/upload", controller.UploadImage)
 
 	// Run
 	e.Logger.Fatal(e.Start(":" + PORT))
