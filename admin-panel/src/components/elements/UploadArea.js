@@ -3,6 +3,7 @@ import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import LinearProgress from 'material-ui/LinearProgress';
 import AppTheme from '../../constants/DesignApp.js';
+import './UploadArea.css';
 
 const zoneStyle = {
   height: 100,
@@ -33,7 +34,7 @@ export default class UploadArea extends Component {
     data.append('file', file);
 
     window.httpClient
-      .post('/upload/image', data, {
+      .post('/upload', data, {
         onUploadProgress: event => {
           this.setState({ completion: event.loaded, max: event.total });
         },
@@ -73,7 +74,7 @@ export default class UploadArea extends Component {
           style={{ borderRadius: 0 }}
         />
         <Dropzone onDrop={this.onDrop} style={{}}>
-          <Paper style={zoneStyle} zDepth={1} rounded={false}>
+          <Paper style={zoneStyle} zDepth={1} rounded={false} className={'stripe'}>
             <p>Drag and drop your files here. Accept JPEG, PNG, MKV, MP4 format.</p>
           </Paper>
         </Dropzone>
