@@ -5,12 +5,14 @@ import AppBar from 'material-ui/AppBar';
 import LeftMenu from './components/LeftMenu';
 import NavItems from './constants/LeftNavigationItems';
 import UploadArea from './components/elements/UploadArea';
+import MediaArea from './components/elements/MediaArea';
 import { Route } from 'react-router-dom';
 import './App.css';
 
 const Elements = () =>
   <div>
     <UploadArea />
+    <MediaArea />
   </div>;
 
 const Timelines = () =>

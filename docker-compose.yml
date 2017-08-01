@@ -35,3 +35,10 @@ services:
       - "MINIO_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
       # - MINIO_REGION="luxembourg"
     command: server /export
+
+  static-provider:
+    image: halverneus/static-file-server:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./s3/data/media:/web
