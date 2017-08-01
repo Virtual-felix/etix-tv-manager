@@ -6,6 +6,8 @@ import (
 	"log"
 
 	"github.com/minio/minio-go"
+
+	"etix-tv-manager/api/model"
 )
 
 const (
@@ -39,19 +41,21 @@ func Init(endpoint, accessKeyID, secretAccessKey string, ssl bool) error {
 }
 
 // ListObjects return all objects in a folder.
-func ListObjects(folder string) error {
+func ListObjects(folder string) ([]model.Media, error) {
 	doneCh := make(chan struct{})
 	defer close(doneCh)
+
+	mediaList := []model.Media{}
 
 	objectCh := client.ListObjectsV2(bucketName, folder, true, doneCh)
 	for object := range objectCh {
 		if object.Err != nil {
 			fmt.Println(object.Err)
-			return object.Err
+			return nil, object.Err
 		}
-		fmt.Println(object)
+		mediaList = append(mediaList, model.Media{Name: object.Key, Size: object.Size, LastModified: object.LastModified})
 	}
-	return nil
+	return mediaList, nil
 }
 
 // NOTE: For now GetObject return a minio object.

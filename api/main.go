@@ -24,6 +24,8 @@ func main() {
 	// Routes descriptions
 	e.GET("/", controller.HelloWorld)
 	e.POST("/upload", controller.UploadImage)
+	e.GET("/media/list/", controller.ListMedia)
+	e.GET("/media/list/:folder", controller.ListMedia)
 
 	// Run
 	e.Logger.Fatal(e.Start(":" + PORT))
