@@ -18,3 +18,14 @@ func ListMedia(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, mediaList)
 }
+
+// RemoveMedia handler for REMOVE on /media route.
+func RemoveMedia(c echo.Context) error {
+	name := c.FormValue("name")
+
+	err := s3.Remove(name)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.NoContent(http.StatusOK)
+}

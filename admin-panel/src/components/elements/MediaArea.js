@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import createAbosluteGrid from 'react-absolute-grid';
 import MediaTile from './MediaTile';
 
-const AbsoluteGrid = createAbosluteGrid(MediaTile, {});
-
 const style = {
   margin: 30,
 };
@@ -29,7 +27,15 @@ export default class MediaArea extends Component {
       });
   };
 
+  onRemoveTile = (success, response) => {
+    if (success) {
+      this.refreshMediaList();
+    }
+  };
+
   render() {
+    const AbsoluteGrid = createAbosluteGrid(MediaTile, { onRemove: this.onRemoveTile });
+
     return (
       <div style={style}>
         <AbsoluteGrid

@@ -7,6 +7,10 @@ const style = {
   width: 160,
   height: 160,
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-around',
+  background: 'white',
 };
 
 const imgStyle = {
@@ -15,22 +19,44 @@ const imgStyle = {
   maxHeight: 100,
   right: 'auto',
   left: 'auto',
+  margin: 'auto',
 };
 
-const nameStyle = {
+const captionStyle = {
   width: '100%',
   height: 60,
   overflow: 'hidden',
+  textAlign: 'center',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  marginTop: 'auto',
+};
+
+const removeButtonStyle = {
+  position: 'fixed',
+  top: 0,
+  right: 0,
 };
 
 export default class MediaTile extends Component {
+  removeTile = tile => {
+    const data = new FormData();
+    data.append('name', this.props.item.name);
+
+    window.httpClient
+      .put('/media', data)
+      .then(response => {
+        this.props.onRemove(true, response);
+      })
+      .catch(error => {
+        this.props.onRemove(false, error);
+      });
+  };
+
   render() {
     return (
       <Paper style={style} zDepth={2}>
-        <FloatingActionButton
-          mini={true}
-          style={{ marginRight: 20, float: 'right', display: 'inline' }}
-        >
+        <FloatingActionButton mini={true} style={removeButtonStyle} onTouchTap={this.removeTile}>
           <ContentAdd />
         </FloatingActionButton>
         <img
@@ -38,11 +64,9 @@ export default class MediaTile extends Component {
           alt={this.props.item.name}
           style={imgStyle}
         />
-        <Paper style={nameStyle}>
-          <p>
-            {this.props.item.name}
-          </p>
-        </Paper>
+        <div style={captionStyle}>
+          {this.props.item.name}
+        </div>
       </Paper>
     );
   }
