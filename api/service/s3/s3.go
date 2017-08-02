@@ -80,3 +80,13 @@ func Upload(name string, file io.Reader) error {
 	}
 	return nil
 }
+
+// Remove is used remove a file.
+func Remove(name string) error {
+	err := client.RemoveObject(bucketName, name)
+	if err != nil {
+		log.Println("S3 operation: can't remove file [", name, "]: ", err)
+		return err
+	}
+	return nil
+}

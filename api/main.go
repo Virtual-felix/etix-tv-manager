@@ -26,6 +26,7 @@ func main() {
 	e.POST("/upload", controller.UploadImage)
 	e.GET("/media/list/", controller.ListMedia)
 	e.GET("/media/list/:folder", controller.ListMedia)
+	e.PUT("/media", controller.RemoveMedia)
 
 	// Run
 	e.Logger.Fatal(e.Start(":" + PORT))
