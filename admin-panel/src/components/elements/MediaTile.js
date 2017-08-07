@@ -47,10 +47,10 @@ export default class MediaTile extends Component {
     window.httpClient
       .put('/media', data)
       .then(response => {
-        this.props.onRemove(true, response);
+        this.props.item.onRemove(true, response, this.props.item);
       })
       .catch(error => {
-        this.props.onRemove(false, error);
+        this.props.item.onRemove(false, error, this.props.item);
       });
   };
 

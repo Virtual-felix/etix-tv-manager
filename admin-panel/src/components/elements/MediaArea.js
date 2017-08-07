@@ -7,6 +7,8 @@ const style = {
   margin: 30,
 };
 
+const AbsoluteGrid = createAbosluteGrid(MediaTile);
+
 export default class MediaArea extends Component {
   constructor(props) {
     super(props);
@@ -28,18 +30,21 @@ export default class MediaArea extends Component {
       });
   };
 
-  onRemoveTile = (success, response) => {
+  onRemoveTile = (success, response, item) => {
     if (success) {
       this.refreshMediaList();
     }
   };
 
   handleUpdateInput = value => {
-    this.state.mediaList.map(item => {
-      if (item.name.toLowerCase().indexOf(value) === -1) {
-        item.filtered = true;
-      } else {
-        item.filtered = false;
+    var search = new RegExp(value, 'i');
+    this.state.mediaList = this.state.mediaList.map(function(item) {
+      const isMatched = !item.name.match(search);
+      if (!item.filtered || isMatched !== item.filtered) {
+        return {
+          ...item,
+          filtered: isMatched,
+        };
       }
       return item;
     });
@@ -47,20 +52,24 @@ export default class MediaArea extends Component {
   };
 
   render() {
-    const AbsoluteGrid = createAbosluteGrid(MediaTile, { onRemove: this.onRemoveTile });
+    const list = this.state.mediaList;
+    list.map(item => {
+      item.onRemove = this.onRemoveTile;
+      return item;
+    });
 
     return (
       <div style={style}>
         <AutoComplete
           hintText="Type anything"
-          dataSource={this.state.mediaList}
+          dataSource={list}
           dataSourceConfig={{ text: 'name', value: 'name' }}
           onUpdateInput={this.handleUpdateInput}
           floatingLabelText="Full width"
           fullWidth={true}
         />
         <AbsoluteGrid
-          items={this.state.mediaList}
+          items={list}
           keyProp={'name'}
           responsive={true}
           dragEnabled={true}
