@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import InlineInputEdit from './InlineInputEdit';
 
 const style = {
   width: 160,
@@ -53,6 +54,21 @@ export default class MediaTile extends Component {
       });
   };
 
+  renameTile = (name, newName) => {
+    const data = new FormData();
+    data.append('name', name);
+    data.append('newname', newName);
+
+    window.httpClient
+      .put('/media/rename', data)
+      .then(response => {
+        // NOTE: Reload the tile, make InlineInputEdit stateless.
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   render() {
     return (
       <Paper style={style} zDepth={2}>
@@ -65,7 +81,7 @@ export default class MediaTile extends Component {
           style={imgStyle}
         />
         <div style={captionStyle}>
-          {this.props.item.name}
+          <InlineInputEdit text={this.props.item.name} onChange={this.renameTile} />
         </div>
       </Paper>
     );

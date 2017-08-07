@@ -27,6 +27,7 @@ func main() {
 	e.GET("/media/list/", controller.ListMedia)
 	e.GET("/media/list/:folder", controller.ListMedia)
 	e.PUT("/media", controller.RemoveMedia)
+	e.PUT("/media/rename", controller.RenameMedia)
 
 	// Run
 	e.Logger.Fatal(e.Start(":" + PORT))

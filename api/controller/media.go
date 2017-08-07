@@ -29,3 +29,15 @@ func RemoveMedia(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusOK)
 }
+
+// RenameMedia handler for PUT on /media/rename route.
+func RenameMedia(c echo.Context) error {
+	name := c.FormValue("name")
+	newName := c.FormValue("newname")
+
+	err := s3.Rename(name, newName)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.NoContent(http.StatusOK)
+}
