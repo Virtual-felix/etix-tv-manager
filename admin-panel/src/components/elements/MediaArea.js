@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import createAbosluteGrid from 'react-absolute-grid';
 import MediaTile from './MediaTile';
+import AutoComplete from 'material-ui/AutoComplete';
 
 const style = {
   margin: 30,
@@ -33,11 +34,31 @@ export default class MediaArea extends Component {
     }
   };
 
+  handleUpdateInput = value => {
+    this.state.mediaList.map(item => {
+      if (item.name.toLowerCase().indexOf(value) === -1) {
+        item.filtered = true;
+      } else {
+        item.filtered = false;
+      }
+      return item;
+    });
+    this.setState({ mediaList: this.state.mediaList });
+  };
+
   render() {
     const AbsoluteGrid = createAbosluteGrid(MediaTile, { onRemove: this.onRemoveTile });
 
     return (
       <div style={style}>
+        <AutoComplete
+          hintText="Type anything"
+          dataSource={this.state.mediaList}
+          dataSourceConfig={{ text: 'name', value: 'name' }}
+          onUpdateInput={this.handleUpdateInput}
+          floatingLabelText="Full width"
+          fullWidth={true}
+        />
         <AbsoluteGrid
           items={this.state.mediaList}
           keyProp={'name'}
