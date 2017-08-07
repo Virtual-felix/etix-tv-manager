@@ -16,6 +16,7 @@
     "react-router-dom": "^4.1.1",
     "react-scripts": "1.0.10",
     "react-tap-event-plugin": "^2.0.1",
+    "riek": "^1.1.0",
     "webfontloader": "^1.6.28"
   },
   "scripts": {

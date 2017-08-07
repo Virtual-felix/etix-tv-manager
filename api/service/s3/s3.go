@@ -90,3 +90,21 @@ func Remove(name string) error {
 	}
 	return nil
 }
+
+// Rename is used to rename a file.
+func Rename(name, newName string) error {
+	src := minio.NewSourceInfo(bucketName, name, nil)
+	dst, err := minio.NewDestinationInfo(bucketName, newName, nil, nil)
+	if err != nil {
+		log.Println("S3 operation: can't rename file [", name, "]: ", err)
+		return err
+	}
+
+	err = client.CopyObject(dst, src)
+	if err != nil {
+		log.Println("S3 operation: can't rename file [", name, "]: ", err)
+		return err
+	}
+
+	return Remove(name)
+}
