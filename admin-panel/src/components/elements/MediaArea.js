@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import createAbosluteGrid from 'react-absolute-grid';
 import MediaTile from './MediaTile';
 import AutoComplete from 'material-ui/AutoComplete';
+import RaisedButton from 'material-ui/RaisedButton';
+import './MediaArea.css';
 
 const style = {
   margin: 30,
@@ -15,6 +17,7 @@ export default class MediaArea extends Component {
 
     this.state = {
       mediaList: [],
+      sort: 'sort',
     };
     this.refreshMediaList();
   }
@@ -38,7 +41,7 @@ export default class MediaArea extends Component {
 
   handleUpdateInput = value => {
     var search = new RegExp(value, 'i');
-    this.state.mediaList = this.state.mediaList.map(function(item) {
+    const list = this.state.mediaList.map(function(item) {
       const isMatched = !item.name.match(search);
       if (!item.filtered || isMatched !== item.filtered) {
         return {
@@ -48,8 +51,12 @@ export default class MediaArea extends Component {
       }
       return item;
     });
-    this.setState({ mediaList: this.state.mediaList });
+    this.setState({ mediaList: list });
   };
+
+  sortByName = () => this.setState({ sort: 'name' });
+  sortBySize = () => this.setState({ sort: 'size' });
+  sortByDate = () => this.setState({ sort: 'lastmodified' });
 
   render() {
     const list = this.state.mediaList;
@@ -60,17 +67,38 @@ export default class MediaArea extends Component {
 
     return (
       <div style={style}>
-        <AutoComplete
-          hintText="Type anything"
-          dataSource={list}
-          dataSourceConfig={{ text: 'name', value: 'name' }}
-          onUpdateInput={this.handleUpdateInput}
-          floatingLabelText="Full width"
-          fullWidth={true}
-        />
+        <div>
+          <RaisedButton
+            label="Names"
+            primary={true}
+            className={'sortButton'}
+            onTouchTap={this.sortByName}
+          />
+          <RaisedButton
+            label="Sizes"
+            primary={true}
+            className={'sortButton'}
+            onTouchTap={this.sortBySize}
+          />
+          <RaisedButton
+            label="Dates"
+            primary={true}
+            className={'sortButton'}
+            onTouchTap={this.sortByDate}
+          />
+          <AutoComplete
+            hintText="Type anything"
+            dataSource={list}
+            dataSourceConfig={{ text: 'name', value: 'name' }}
+            onUpdateInput={this.handleUpdateInput}
+            floatingLabelText="Search a file"
+            fullWidth={false}
+          />
+        </div>
         <AbsoluteGrid
           items={list}
           keyProp={'name'}
+          sortProp={this.state.sort}
           responsive={true}
           dragEnabled={true}
           itemWidth={160}
