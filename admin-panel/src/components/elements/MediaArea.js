@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import createAbosluteGrid from 'react-absolute-grid';
 import MediaTile from './MediaTile';
 import AutoComplete from 'material-ui/AutoComplete';
+import RaisedButton from 'material-ui/RaisedButton';
+import './MediaArea.css';
 
 const style = {
   margin: 30,
 };
+
+const AbsoluteGrid = createAbosluteGrid(MediaTile);
 
 export default class MediaArea extends Component {
   constructor(props) {
@@ -13,6 +17,7 @@ export default class MediaArea extends Component {
 
     this.state = {
       mediaList: [],
+      sort: 'sort',
     };
     this.refreshMediaList();
   }
@@ -28,40 +33,72 @@ export default class MediaArea extends Component {
       });
   };
 
-  onRemoveTile = (success, response) => {
+  onRemoveTile = (success, response, item) => {
     if (success) {
       this.refreshMediaList();
     }
   };
 
   handleUpdateInput = value => {
-    this.state.mediaList.map(item => {
-      if (item.name.toLowerCase().indexOf(value) === -1) {
-        item.filtered = true;
-      } else {
-        item.filtered = false;
+    var search = new RegExp(value, 'i');
+    const list = this.state.mediaList.map(function(item) {
+      const isMatched = !item.name.match(search);
+      if (!item.filtered || isMatched !== item.filtered) {
+        return {
+          ...item,
+          filtered: isMatched,
+        };
       }
       return item;
     });
-    this.setState({ mediaList: this.state.mediaList });
+    this.setState({ mediaList: list });
   };
 
+  sortByName = () => this.setState({ sort: 'name' });
+  sortBySize = () => this.setState({ sort: 'size' });
+  sortByDate = () => this.setState({ sort: 'lastmodified' });
+
   render() {
-    const AbsoluteGrid = createAbosluteGrid(MediaTile, { onRemove: this.onRemoveTile });
+    const list = this.state.mediaList;
+    list.map(item => {
+      item.onRemove = this.onRemoveTile;
+      return item;
+    });
 
     return (
       <div style={style}>
-        <AutoComplete
-          hintText="Type anything"
-          dataSource={this.state.mediaList}
-          dataSourceConfig={{ text: 'name', value: 'name' }}
-          onUpdateInput={this.handleUpdateInput}
-          floatingLabelText="Full width"
-          fullWidth={true}
-        />
+        <div>
+          <RaisedButton
+            label="Names"
+            primary={true}
+            className={'sortButton'}
+            onTouchTap={this.sortByName}
+          />
+          <RaisedButton
+            label="Sizes"
+            primary={true}
+            className={'sortButton'}
+            onTouchTap={this.sortBySize}
+          />
+          <RaisedButton
+            label="Dates"
+            primary={true}
+            className={'sortButton'}
+            onTouchTap={this.sortByDate}
+          />
+          <AutoComplete
+            hintText="Type anything"
+            dataSource={list}
+            dataSourceConfig={{ text: 'name', value: 'name' }}
+            onUpdateInput={this.handleUpdateInput}
+            floatingLabelText="Search a file"
+            fullWidth={false}
+          />
+        </div>
         <AbsoluteGrid
-          items={this.state.mediaList}
+          items={list}
           keyProp={'name'}
+          sortProp={this.state.sort}
           responsive={true}
           dragEnabled={true}
           itemWidth={160}
