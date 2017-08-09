@@ -23,7 +23,7 @@ func main() {
 
 	// Routes descriptions
 	e.GET("/", controller.HelloWorld)
-	e.POST("/upload", controller.UploadImage)
+	e.POST("/upload", controller.Upload)
 	e.GET("/media/list/", controller.ListMedia)
 	e.GET("/media/list/:folder", controller.ListMedia)
 	e.PUT("/media", controller.RemoveMedia)
