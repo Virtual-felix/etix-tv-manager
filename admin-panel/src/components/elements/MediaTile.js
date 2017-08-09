@@ -1,10 +1,72 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentClear from 'material-ui/svg-icons/content/clear';
 import InlineInputEdit from './InlineInputEdit';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import AppTheme from '../../constants/DesignApp.js';
+import './MediaTile.css';
 
-const style = {
+export default class MediaTile extends Component {
+  render() {
+    var items = [...this.props.item.menuItems];
+    if (!this.props.item.isRoot) {
+      items.push('..');
+    }
+    items = items.map(menuItem => {
+      return (
+        <MenuItem
+          key={menuItem}
+          primaryText={menuItem}
+          onTouchTap={event => {
+            this.props.item.onMenuSelection(this.props.item.name, menuItem);
+          }}
+        />
+      );
+    });
+
+    return (
+      <Paper style={sContainer} zDepth={2}>
+        <FloatingActionButton
+          mini={true}
+          color={AppTheme.palette.primary3Color}
+          style={sDeleteButton}
+          onTouchTap={event => {
+            this.props.item.onRemove(this.props.item.name);
+          }}
+        >
+          <ContentClear />
+        </FloatingActionButton>
+        <IconMenu
+          iconButtonElement={
+            <IconButton>
+              <MoreVertIcon />
+            </IconButton>
+          }
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          children={items}
+          style={sFolderMenu}
+        />
+        <img
+          src={'http://127.0.0.1:8080/' + this.props.item.name}
+          alt={this.props.item.name}
+          style={sContentImage}
+        />
+        <div style={sCaption}>
+          <InlineInputEdit text={this.props.item.name} onChange={this.props.item.onTextChange} />
+        </div>
+      </Paper>
+    );
+  }
+}
+
+// Inline style
+
+const sContainer = {
   width: 160,
   height: 160,
   overflow: 'hidden',
@@ -14,76 +76,33 @@ const style = {
   background: 'white',
 };
 
-const imgStyle = {
+const sContentImage = {
   maxWidth: '100%',
   height: 'auto',
-  maxHeight: 100,
+  maxHeight: 105,
   right: 'auto',
   left: 'auto',
   margin: 'auto',
 };
 
-const captionStyle = {
-  width: '100%',
-  height: 60,
+const sCaption = {
+  width: 120,
+  height: 35,
   overflow: 'hidden',
-  textAlign: 'center',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   marginTop: 'auto',
+  marginLeft: 40,
 };
 
-const removeButtonStyle = {
+const sDeleteButton = {
   position: 'fixed',
   top: 0,
   right: 0,
 };
 
-export default class MediaTile extends Component {
-  removeTile = tile => {
-    const data = new FormData();
-    data.append('name', this.props.item.name);
-
-    window.httpClient
-      .put('/media', data)
-      .then(response => {
-        this.props.item.onRemove(true, response, this.props.item);
-      })
-      .catch(error => {
-        this.props.item.onRemove(false, error, this.props.item);
-      });
-  };
-
-  renameTile = (name, newName) => {
-    const data = new FormData();
-    data.append('name', name);
-    data.append('newname', newName);
-
-    window.httpClient
-      .put('/media/rename', data)
-      .then(response => {
-        // NOTE: Reload the tile, make InlineInputEdit stateless.
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  render() {
-    return (
-      <Paper style={style} zDepth={2}>
-        <FloatingActionButton mini={true} style={removeButtonStyle} onTouchTap={this.removeTile}>
-          <ContentAdd />
-        </FloatingActionButton>
-        <img
-          src={'http://127.0.0.1:8080/' + this.props.item.name}
-          alt={this.props.item.name}
-          style={imgStyle}
-        />
-        <div style={captionStyle}>
-          <InlineInputEdit text={this.props.item.name} onChange={this.renameTile} />
-        </div>
-      </Paper>
-    );
-  }
-}
+const sFolderMenu = {
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+};

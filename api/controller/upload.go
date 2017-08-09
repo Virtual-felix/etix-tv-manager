@@ -9,8 +9,8 @@ import (
 	"etix-tv-manager/api/service/s3"
 )
 
-// UploadImage handler for POST on /upload route.
-func UploadImage(c echo.Context) error {
+// Upload handler for POST on /upload route.
+func Upload(c echo.Context) error {
 	name := c.FormValue("name")
 
 	// Source
