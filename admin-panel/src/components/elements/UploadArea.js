@@ -5,14 +5,23 @@ import LinearProgress from 'material-ui/LinearProgress';
 import AppTheme from '../../constants/DesignApp.js';
 import './UploadArea.css';
 
-const zoneStyle = {
-  height: 100,
-  width: '100%',
-  margin: 0,
-  padding: 0,
-  textAlign: 'center',
-  display: 'inline-block',
+// API Requests
+
+const UploadFile = (file, setProgress) => {
+  const data = new FormData();
+  data.append('name', file.name);
+  data.append('type', file.type);
+  data.append('size', file.size);
+  data.append('file', file);
+
+  return window.httpClient.post('/upload', data, {
+    onUploadProgress: event => {
+      setProgress(event.loaded, event.total);
+    },
+  });
 };
+
+// Main
 
 export default class UploadArea extends Component {
   constructor(props) {
@@ -27,30 +36,28 @@ export default class UploadArea extends Component {
   }
 
   uploadFile = file => {
-    const data = new FormData();
-    data.append('name', file.name);
-    data.append('type', file.type);
-    data.append('size', file.size);
-    data.append('file', file);
-
-    window.httpClient
-      .post('/upload', data, {
-        onUploadProgress: event => {
-          this.setState({ completion: event.loaded, max: event.total });
-        },
-      })
+    UploadFile(file, (loaded, total) => {
+      this.setState({ completion: loaded, max: total });
+    })
       .then(response => {
-        this.setState({ completionTotal: this.state.completionTotal + 1 });
+        this.setState(state => {
+          return { completionTotal: this.state.completionTotal + 1 };
+        });
+        this.props.onFileUploaded();
       })
       .catch(error => {
         // NOTE: Show an error with information about which file failed.
         // Maybe use a Snackbar or other kind of notifications.
-        this.setState({ maxTotal: this.state.maxTotal - 1 });
+        this.setState(state => {
+          return { maxTotal: this.state.maxTotal - 1 };
+        });
       });
   };
 
   onDrop = (files, rejected) => {
-    this.setState({ completionTotal: 0, maxTotal: files.length });
+    this.setState(state => {
+      return { completionTotal: 0, maxTotal: files.length };
+    });
     files.forEach(file => {
       this.uploadFile(file);
     });
@@ -82,3 +89,14 @@ export default class UploadArea extends Component {
     );
   }
 }
+
+// Inline styles
+
+const zoneStyle = {
+  height: 100,
+  width: '100%',
+  margin: 0,
+  padding: 0,
+  textAlign: 'center',
+  display: 'inline-block',
+};

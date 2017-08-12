@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentClear from 'material-ui/svg-icons/content/clear';
-import InlineInputEdit from './InlineInputEdit';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import InlineInputEdit from '../shared/InlineInputEdit';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
@@ -39,6 +40,16 @@ export default class MediaTile extends Component {
           }}
         >
           <ContentClear />
+        </FloatingActionButton>
+        <FloatingActionButton
+          mini={true}
+          color={AppTheme.palette.primary3Color}
+          style={sAddButton}
+          onTouchTap={event => {
+            this.props.item.onAdd(this.props.item.name);
+          }}
+        >
+          <ContentAdd />
         </FloatingActionButton>
         <IconMenu
           iconButtonElement={
@@ -99,6 +110,12 @@ const sDeleteButton = {
   position: 'fixed',
   top: 0,
   right: 0,
+};
+
+const sAddButton = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
 };
 
 const sFolderMenu = {
