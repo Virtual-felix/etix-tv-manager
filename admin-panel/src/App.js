@@ -4,16 +4,10 @@ import AppTheme from './constants/DesignApp.js';
 import AppBar from 'material-ui/AppBar';
 import LeftMenu from './components/LeftMenu';
 import NavItems from './constants/LeftNavigationItems';
-import UploadArea from './components/elements/UploadArea';
-import MediaArea from './components/elements/MediaArea';
+import FilesView from './views/Files';
+
 import { Route } from 'react-router-dom';
 import './App.css';
-
-const Elements = () =>
-  <div>
-    <UploadArea />
-    <MediaArea />
-  </div>;
 
 const Timelines = () =>
   <div>
@@ -64,7 +58,7 @@ class App extends Component {
 
           {/* MAIN CONTENT */}
           <div style={contentStyle}>
-            <Route exact path="/" component={Elements} />
+            <Route exact path="/" component={FilesView} />
             <Route path="/timelines" component={Timelines} />
             <Route path="/schedule" component={Schedule} />
             <Route path="/tv" component={Television} />
