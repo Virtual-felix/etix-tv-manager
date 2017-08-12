@@ -6,7 +6,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import InputTextDialog from './InputTextDialog';
+import InputTextDialog from '../shared/InputTextDialog';
 import './MediaArea.css';
 
 // Components
@@ -26,10 +26,6 @@ const SortFilesButton = props => {
 };
 
 // API Requests
-
-const GetAllFiles = () => {
-  return window.httpClient.get('/media/list/');
-};
 
 const DeleteFile = name => {
   const data = new FormData();
@@ -81,7 +77,6 @@ export default class MediaArea extends Component {
     super(props);
 
     this.state = {
-      allFiles: [],
       mediaList: [],
       folderList: [],
       path: [],
@@ -93,11 +88,24 @@ export default class MediaArea extends Component {
   }
 
   componentDidMount() {
-    this.refreshMediaList();
+    // NOTE: Should I put it as it work without ?
+    this.props.refreshFiles();
   }
 
+  componentWillReceiveProps(nextProps) {
+    var obj = SortFiles(nextProps.files, this.state.path);
+    this.setState(state => {
+      return {
+        mediaList: obj.medias,
+        folderList: obj.folders,
+      };
+    });
+  }
+
+  // NOTE: Above: Wtf declaration function?
+
   sumPath = newPath => {
-    var obj = SortFiles(this.state.allFiles, [...this.state.path, newPath]);
+    var obj = SortFiles(this.props.files, [...this.state.path, newPath]);
     this.setState(state => {
       return {
         path: [...state.path, newPath],
@@ -111,7 +119,7 @@ export default class MediaArea extends Component {
   subPath = () => {
     var newPath = [...this.state.path];
     var folder = newPath.pop();
-    var obj = SortFiles(this.state.allFiles, newPath);
+    var obj = SortFiles(this.props.files, newPath);
     this.setState(state => {
       return {
         path: newPath,
@@ -120,17 +128,6 @@ export default class MediaArea extends Component {
         folderList: obj.folders,
       };
     });
-  };
-
-  refreshMediaList = () => {
-    GetAllFiles()
-      .then(response => {
-        var obj = SortFiles(response.data, this.state.path);
-        this.setState({ allFiles: response.data, mediaList: obj.medias, folderList: obj.folders });
-      })
-      .catch(error => {
-        console.log('Error while getting all files: ', error);
-      });
   };
 
   searchFilter = value => {
@@ -189,7 +186,7 @@ export default class MediaArea extends Component {
   removeFile = name => {
     DeleteFile(name)
       .then(response => {
-        this.refreshMediaList();
+        this.props.refreshFiles();
       })
       .catch(error => {
         console.log('Error while removing file: ', error);
@@ -199,7 +196,7 @@ export default class MediaArea extends Component {
   renameFile = (name, newName) => {
     RenameFile(name, newName)
       .then(response => {
-        this.refreshMediaList();
+        this.props.refreshFiles();
       })
       .catch(error => {
         console.log('Error while renaming file: ', error);
@@ -221,6 +218,7 @@ export default class MediaArea extends Component {
   render() {
     const list = this.state.mediaList.map(item => {
       item.onRemove = this.removeFile;
+      item.onAdd = this.props.onAddFile;
       item.onMenuSelection = this.moveToFolder;
       item.menuItems = this.state.folderList;
       item.onTextChange = this.renameFile;
