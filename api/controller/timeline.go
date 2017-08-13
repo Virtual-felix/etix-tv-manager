@@ -3,10 +3,8 @@ package controller
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo"
-	"github.com/pkg/errors"
 
 	"etix-tv-manager/api/service"
 )
@@ -160,22 +158,4 @@ func (tc *Timeline) DeleteItem(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, err.Error())
 	}
 	return ctx.NoContent(http.StatusOK)
-}
-
-// Helpers
-
-func paramToIntHelper(str string) (int, error) {
-	value, err := strconv.Atoi(str)
-	if err != nil {
-		return -1, errors.Wrap(err, "Bad parameters numeric expected")
-	}
-	return value, nil
-}
-
-func paramToBoolHelper(str string) (bool, error) {
-	value, err := strconv.ParseBool(str)
-	if err != nil {
-		return false, errors.Wrap(err, "Bad parameters bool expected")
-	}
-	return value, nil
 }
