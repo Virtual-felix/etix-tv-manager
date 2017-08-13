@@ -5,6 +5,7 @@ import AppBar from 'material-ui/AppBar';
 import LeftMenu from './components/LeftMenu';
 import NavItems from './constants/LeftNavigationItems';
 import FilesView from './views/Files';
+import TelevisionsView from './views/Television';
 
 import { Route } from 'react-router-dom';
 import './App.css';
@@ -17,11 +18,6 @@ const Timelines = () =>
 const Schedule = () =>
   <div>
     <h2>Schedule</h2>
-  </div>;
-
-const Television = () =>
-  <div>
-    <h2>Television</h2>
   </div>;
 
 class App extends Component {
@@ -61,7 +57,7 @@ class App extends Component {
             <Route exact path="/" component={FilesView} />
             <Route path="/timelines" component={Timelines} />
             <Route path="/schedule" component={Schedule} />
-            <Route path="/tv" component={Television} />
+            <Route path="/tv" component={TelevisionsView} />
           </div>
         </div>
       </MuiThemeProvider>

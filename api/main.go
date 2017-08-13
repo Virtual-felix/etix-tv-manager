@@ -41,16 +41,20 @@ func main() {
 	// DB migration
 	db.AutoMigrate(&model.Timeline{})
 	db.AutoMigrate(&model.TimelineItem{})
+	db.AutoMigrate(&model.Television{})
 
 	// initialize controllers
 	timelineRepo := repository.NewORMTimelineRepository(db)
 	timelineItemRepo := repository.NewORMTimelineItemRepository(db)
+	televisionRepo := repository.NewORMTelevisionRepository(db)
 
 	s3Service := service.NewS3(s3Client)
 	timelineService := service.NewTimeline(timelineRepo, timelineItemRepo)
+	televisionService := service.NewTelevision(televisionRepo)
 
 	mediaController := controller.NewMedias(s3Service)
 	timelineController := controller.NewTimeline(timelineService)
+	televisionController := controller.NewTelevision(televisionService)
 
 	e := echo.New()
 	// API configuration
@@ -72,6 +76,11 @@ func main() {
 	e.GET("/timeline/:tid/items", timelineController.ListItems)
 	e.PUT("/timeline/item/:id", timelineController.UpdateItem)
 	e.DELETE("/timeline/item/:id", timelineController.DeleteItem)
+
+	e.GET("/televisions", televisionController.List)
+	e.POST("/television", televisionController.Create)
+	e.PUT("/television", televisionController.Update)
+	e.DELETE("/television", televisionController.Delete)
 
 	// Run
 	e.Logger.Fatal(e.Start(":" + PORT))
