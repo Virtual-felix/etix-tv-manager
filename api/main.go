@@ -58,7 +58,7 @@ func main() {
 	mediaController := controller.NewMedias(s3Service)
 	timelineController := controller.NewTimeline(timelineService)
 	televisionController := controller.NewTelevision(televisionService)
-	planificationController := controller.NewPlanification(planificationService)
+	planificationController := controller.NewPlanification(planificationService, televisionService)
 
 	e := echo.New()
 	// API configuration
@@ -87,6 +87,7 @@ func main() {
 	e.DELETE("/television", televisionController.Delete)
 
 	e.GET("/planifications/:id", planificationController.List)
+	e.GET("/planifications/tv", planificationController.ListForTv)
 	e.POST("/planification", planificationController.Create)
 	e.PUT("/planification/:id", planificationController.Update)
 	e.DELETE("/planification/:id", planificationController.Delete)

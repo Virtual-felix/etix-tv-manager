@@ -21,6 +21,16 @@ services:
     volumes:
       - "./admin-panel:/usr/src/app"
 
+  viewer:
+    build:
+      context: ./viewer/
+      dockerfile: Dockerfile
+    image: etixtv/viewer
+    ports:
+      - "3042:3000"
+    volumes:
+      - "./viewer:/usr/src/app"
+
   s3:
     image: minio/minio
     ports:
