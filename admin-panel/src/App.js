@@ -6,6 +6,7 @@ import LeftMenu from './components/LeftMenu';
 import NavItems from './constants/LeftNavigationItems';
 import FilesView from './views/Files';
 import TelevisionsView from './views/Television';
+import SchedulesView from './views/Schedules';
 
 import { Route } from 'react-router-dom';
 import './App.css';
@@ -13,11 +14,6 @@ import './App.css';
 const Timelines = () =>
   <div>
     <h2>Timelines</h2>
-  </div>;
-
-const Schedule = () =>
-  <div>
-    <h2>Schedule</h2>
   </div>;
 
 class App extends Component {
@@ -56,7 +52,7 @@ class App extends Component {
           <div style={contentStyle}>
             <Route exact path="/" component={FilesView} />
             <Route path="/timelines" component={Timelines} />
-            <Route path="/schedule" component={Schedule} />
+            <Route path="/schedule" component={SchedulesView} />
             <Route path="/tv" component={TelevisionsView} />
           </div>
         </div>
