@@ -12,12 +12,14 @@ import (
 
 // Planification controller.
 type Planification struct {
-	ts *service.Planification
+	ps *service.Planification
+	ts *service.Television
 }
 
 // NewPlanification creates a new controller for planifications.
-func NewPlanification(ts *service.Planification) *Planification {
+func NewPlanification(ps *service.Planification, ts *service.Television) *Planification {
 	tc := &Planification{
+		ps: ps,
 		ts: ts,
 	}
 	return tc
@@ -31,7 +33,24 @@ func (tc *Planification) List(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, errID.Error())
 	}
 
-	planifications, err := tc.ts.List(uint(TVID))
+	planifications, err := tc.ps.List(uint(TVID))
+	if err != nil {
+		log.Println(err)
+		return ctx.String(http.StatusBadRequest, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, planifications)
+}
+
+// ListForTv list all planifications for a TV.
+func (tc *Planification) ListForTv(ctx echo.Context) error {
+	ip := ctx.RealIP()
+
+	tv, err := tc.ts.FindByIP(ip)
+	if err != nil {
+		log.Println(err)
+		return ctx.String(http.StatusBadRequest, err.Error())
+	}
+	planifications, err := tc.ps.List(tv[0].ID)
 	if err != nil {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())
@@ -62,7 +81,7 @@ func (tc *Planification) Create(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, errEnd.Error())
 	}
 
-	err := tc.ts.Create(uint(TVID), uint(TiID), time.Unix(start, 0), time.Unix(end, 0))
+	err := tc.ps.Create(uint(TVID), uint(TiID), time.Unix(start, 0), time.Unix(end, 0))
 	if err != nil {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())
@@ -98,7 +117,7 @@ func (tc *Planification) Update(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, errEnd.Error())
 	}
 
-	err := tc.ts.Update(uint(ID), uint(TVID), uint(TiID), time.Unix(start, 0), time.Unix(end, 0))
+	err := tc.ps.Update(uint(ID), uint(TVID), uint(TiID), time.Unix(start, 0), time.Unix(end, 0))
 	if err != nil {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())
@@ -113,6 +132,6 @@ func (tc *Planification) Delete(ctx echo.Context) error {
 		log.Println(errID)
 		return ctx.String(http.StatusBadRequest, errID.Error())
 	}
-	tc.ts.Delete(uint(ID))
+	tc.ps.Delete(uint(ID))
 	return ctx.NoContent(http.StatusOK)
 }

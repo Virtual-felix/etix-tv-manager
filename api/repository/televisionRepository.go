@@ -79,14 +79,14 @@ func (ar *ORMTelevisionRepository) Remove(id uint) error {
 }
 
 // Find will search for televisions using optional filters
-func (ar *ORMTelevisionRepository) Find(televisionGroupIDs []uint, names []string) ([]*model.Television, error) {
+func (ar *ORMTelevisionRepository) Find(televisionGroupIDs []uint, IP []string) ([]*model.Television, error) {
 	var televisions []*model.Television
 	query := ar.orm
 	if len(televisionGroupIDs) > 0 {
 		query = query.Where("groupid IN (?)", televisionGroupIDs)
 	}
-	if len(names) > 0 {
-		query = query.Where("name IN (?)", names)
+	if len(IP) > 0 {
+		query = query.Where("ip IN (?)", IP)
 	}
 	err := query.Find(&televisions).Error
 	return televisions, err
