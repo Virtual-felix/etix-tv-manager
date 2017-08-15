@@ -102,7 +102,7 @@ func (tc *Timeline) CreateItems(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, errIndex.Error())
 	}
 
-	err = tc.ts.CreateItem(uint(tID), name, "unselected", 0, index)
+	err = tc.ts.CreateItem(uint(tID), name, "unselected", 0, int(index))
 	if err != nil {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())
@@ -136,7 +136,7 @@ func (tc *Timeline) UpdateItem(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, errIndex.Error())
 	}
 
-	err := tc.ts.UpdateItem(uint(tID), uint(ID), name, category, time, index)
+	err := tc.ts.UpdateItem(uint(tID), uint(ID), name, category, int(time), int(index))
 	if err != nil {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())
