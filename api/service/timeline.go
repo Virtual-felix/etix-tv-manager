@@ -30,6 +30,11 @@ func (s *Timeline) List() ([]*model.Timeline, error) {
 	return s.timelineRepo.Find([]uint{}, []string{})
 }
 
+// Get is used to get a timeline.
+func (s *Timeline) Get(ID uint) (*model.Timeline, error) {
+	return s.timelineRepo.Retrieve(ID)
+}
+
 // Update is used to update a timeline.
 func (s *Timeline) Update(id uint, name string, summary bool) error {
 	t := &model.Timeline{ID: id, Name: name, Summary: summary}

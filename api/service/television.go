@@ -38,3 +38,8 @@ func (s *Television) Update(ID, gID uint, name, IP string) error {
 func (s *Television) Delete(ID uint) error {
 	return s.televisionRepo.Remove(ID)
 }
+
+// FindByIP is used to find a television with its IP address.
+func (s *Television) FindByIP(IP string) ([]*model.Television, error) {
+	return s.televisionRepo.Find([]uint{}, []string{IP})
+}
