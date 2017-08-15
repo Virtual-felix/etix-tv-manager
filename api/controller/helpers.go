@@ -5,8 +5,8 @@ import (
 	"strconv"
 )
 
-func paramToIntHelper(str string) (int, error) {
-	value, err := strconv.Atoi(str)
+func paramToIntHelper(str string) (int64, error) {
+	value, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
 		return -1, errors.Wrap(err, "Bad parameters numeric expected")
 	}
