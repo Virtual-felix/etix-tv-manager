@@ -44,7 +44,6 @@ class App extends Component {
           const now = moment();
 
           if (start - now < 0 && end - now > 0) {
-            console.log('Planification selected!');
             this.setState(state => {
               return { selectedPlanification: response.data[i] };
             }, this.refreshTimelineItems);

@@ -44,11 +44,21 @@ const CreatePlanification = (tvid, tiid, startAt, endAt) => {
 };
 
 const UpdatePlanification = (id, tvid, tiid, startAt, endAt) => {
-  //
+  const fmtStart = moment(startAt);
+  const fmtEnd = moment(endAt);
+
+  const data = new FormData();
+  data.append('tvid', tvid);
+  data.append('tiid', tiid);
+  data.append('startat', fmtStart.unix());
+  data.append('endat', fmtEnd.unix());
+
+  return window.httpClient.put('/planification/' + id, data);
 };
 
 const DeletePlanification = id => {
-  //
+  console.log(id);
+  return window.httpClient.delete('planification/' + id);
 };
 
 // Row Component
@@ -64,6 +74,21 @@ const Row = props => {
       </TableRowColumn>
       <TableRowColumn>
         {props.end}
+      </TableRowColumn>
+      <TableRowColumn>
+        <RaisedButton
+          label="Delete"
+          secondary={true}
+          onTouchTap={() => {
+            props.onDelete(props.id);
+          }}
+        />
+        <RaisedButton
+          label="Save"
+          onTouchTap={() => {
+            props.onUpdate(props.id);
+          }}
+        />
       </TableRowColumn>
     </TableRow>
   );
@@ -185,6 +210,28 @@ export default class SchedulesView extends Component {
       });
   };
 
+  deletePlanification = id => {
+    DeletePlanification(id)
+      .then(response => {
+        this.refreshPlanifications();
+      })
+      .catch(error => {
+        console.log('Delete planification failed: ', error);
+      });
+  };
+
+  updatePlanification = id => {
+    const tv = this.state.televisions[this.state.selectedTelevision];
+    const timeline = this.state.timelines[this.state.selectedTimeline];
+    UpdatePlanification(id, tv.id, timeline.id, this.state.startAt, this.state.endAt)
+      .then(response => {
+        this.refreshPlanifications();
+      })
+      .catch(error => {
+        console.log('Update planification failed: ', error);
+      });
+  };
+
   render() {
     const televisions = this.state.televisions.map((i, key) => {
       return <MenuItem value={i.name} key={key} primaryText={i.name} />;
@@ -195,7 +242,14 @@ export default class SchedulesView extends Component {
     });
 
     const rows = this.state.planifications.map(i => {
-      return Row({ name: i.tiid, start: i.startAt, end: i.endAt });
+      return Row({
+        name: i.tiid,
+        start: i.startAt,
+        end: i.endAt,
+        id: i.id,
+        onDelete: this.deletePlanification,
+        onUpdate: this.updatePlanification,
+      });
     });
 
     return (
@@ -267,6 +321,7 @@ export default class SchedulesView extends Component {
                 <TableHeaderColumn>Timeline</TableHeaderColumn>
                 <TableHeaderColumn>Start at</TableHeaderColumn>
                 <TableHeaderColumn>End at</TableHeaderColumn>
+                <TableHeaderColumn>Actions</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody children={rows} />
