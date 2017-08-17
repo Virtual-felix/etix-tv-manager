@@ -7,13 +7,15 @@ import (
 
 // Television represents the service responsible for managing televisions.
 type Television struct {
-	televisionRepo repository.TelevisionRepository
+	televisionRepo      repository.TelevisionRepository
+	groupTelevisionRepo repository.GroupTelevisionRepository
 }
 
 // NewTelevision creates a new television service for televisions.
-func NewTelevision(televisionRepo repository.TelevisionRepository) *Television {
+func NewTelevision(televisionRepo repository.TelevisionRepository, groupTelevisionRepo repository.GroupTelevisionRepository) *Television {
 	return &Television{
-		televisionRepo: televisionRepo,
+		televisionRepo:      televisionRepo,
+		groupTelevisionRepo: groupTelevisionRepo,
 	}
 }
 
@@ -42,4 +44,15 @@ func (s *Television) Delete(ID uint) error {
 // FindByIP is used to find a television with its IP address.
 func (s *Television) FindByIP(IP string) ([]*model.Television, error) {
 	return s.televisionRepo.Find([]uint{}, []string{IP})
+}
+
+// CreateGroup is used to create a new group of televisions.
+func (s *Television) CreateGroup(name string) error {
+	ti := &model.GroupTelevision{Name: name}
+	return s.groupTelevisionRepo.Store(ti)
+}
+
+// ListGroup is sued to list all group of television.
+func (s *Television) ListGroup() ([]*model.GroupTelevision, error) {
+	return s.groupTelevisionRepo.Find()
 }

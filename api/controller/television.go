@@ -54,7 +54,7 @@ func (tc *Television) Update(ctx echo.Context) error {
 		log.Println(errID)
 		return ctx.String(http.StatusBadRequest, errID.Error())
 	}
-	gID, errgID := paramToIntHelper(ctx.Param("gid"))
+	gID, errgID := paramToIntHelper(ctx.FormValue("gid"))
 	if errgID != nil {
 		log.Println(errgID)
 		return ctx.String(http.StatusBadRequest, errgID.Error())
@@ -77,4 +77,26 @@ func (tc *Television) Delete(ctx echo.Context) error {
 	}
 	tc.ts.Delete(uint(ID))
 	return ctx.NoContent(http.StatusOK)
+}
+
+// CreateGroup create a group for televisions.
+func (tc *Television) CreateGroup(ctx echo.Context) error {
+	name := ctx.FormValue("name")
+
+	err := tc.ts.CreateGroup(name)
+	if err != nil {
+		log.Println(err)
+		return ctx.String(http.StatusBadRequest, err.Error())
+	}
+	return ctx.NoContent(http.StatusOK)
+}
+
+// ListGroup lst all groups of television.
+func (tc *Television) ListGroup(ctx echo.Context) error {
+	group, err := tc.ts.ListGroup()
+	if err != nil {
+		log.Println(err)
+		return ctx.String(http.StatusBadRequest, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, group)
 }

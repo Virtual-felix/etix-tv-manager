@@ -13,8 +13,6 @@ import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const fakeGroups = ['entry', 'first-floor', 'second-floor', 'third-floor'];
-
 // API Requests
 
 const GetAllTelevisions = () => {
@@ -29,11 +27,31 @@ const CreateTelevision = (name, ip) => {
   return window.httpClient.post('/television', data);
 };
 
+const UpdateTelevision = (id, name, ip, gid) => {
+  const data = new FormData();
+  data.append('name', name);
+  data.append('ip', ip);
+  data.append('gid', gid);
+
+  return window.httpClient.put('/television/' + id, data);
+};
+
+const GetAllGroups = () => {
+  return window.httpClient.get('/television/groups');
+};
+
+const CreateGroup = name => {
+  const data = new FormData();
+  data.append('name', name);
+
+  return window.httpClient.post('/television/group', data);
+};
+
 // Row Component
 
 const Row = props => {
-  const groups = fakeGroups.map((i, key) => {
-    return <MenuItem key={key} value={key} primaryText={i} />;
+  const groups = props.groups.map((i, key) => {
+    return <MenuItem key={i.id} value={i.id} primaryText={i.name} />;
   });
 
   return (
@@ -45,7 +63,14 @@ const Row = props => {
         {props.ip}
       </TableRowColumn>
       <TableRowColumn>
-        <SelectField floatingLabelText="Group" value={props.group} children={groups} />
+        <SelectField
+          floatingLabelText="Group"
+          value={props.gid}
+          children={groups}
+          onChange={(e, key, payload) => {
+            props.onUpdate(props.id, props.name, props.ip, props.groups[key].id);
+          }}
+        />
       </TableRowColumn>
     </TableRow>
   );
@@ -57,13 +82,16 @@ export default class TelevisionsView extends Component {
 
     this.state = {
       televisions: [],
+      groups: [],
       creationName: '',
+      creationGroupName: '',
       creationIp: '',
     };
   }
 
   componentWillMount = () => {
     this.refreshTelevisions();
+    this.refreshGroups();
   };
 
   refreshTelevisions = () => {
@@ -75,6 +103,18 @@ export default class TelevisionsView extends Component {
       })
       .catch(error => {
         console.log('Get all televisions failed: ', error);
+      });
+  };
+
+  refreshGroups = () => {
+    GetAllGroups()
+      .then(response => {
+        this.setState(state => {
+          return { groups: response.data };
+        });
+      })
+      .catch(error => {
+        console.log('Get all groups failed: ', error);
       });
   };
 
@@ -91,6 +131,29 @@ export default class TelevisionsView extends Component {
       });
   };
 
+  updateTv = (id, name, ip, gid) => {
+    UpdateTelevision(id, name, ip, gid)
+      .then(response => {
+        this.refreshTelevisions();
+      })
+      .catch(error => {
+        console.log('Update television failed: ', error);
+      });
+  };
+
+  createGroup = () => {
+    CreateGroup(this.state.creationGroupName)
+      .then(response => {
+        this.refreshGroups();
+        this.setState(state => {
+          return { creationGroupName: '' };
+        });
+      })
+      .catch(error => {
+        console.log('Create group failed: ', error);
+      });
+  };
+
   updateCreationName = (event, value) => {
     this.setState(state => {
       return { creationName: value };
@@ -103,8 +166,16 @@ export default class TelevisionsView extends Component {
     });
   };
 
+  updateCreationGroupName = (event, value) => {
+    this.setState(state => {
+      return { creationGroupName: value };
+    });
+  };
+
   render() {
     const rows = this.state.televisions.map(i => {
+      i.groups = this.state.groups;
+      i.onUpdate = this.updateTv;
       return Row(i);
     });
 
@@ -125,6 +196,15 @@ export default class TelevisionsView extends Component {
           />
           <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
             <RaisedButton label="Create" onTouchTap={this.createTv} />
+          </div>
+          <TextField
+            onChange={this.updateCreationGroupName}
+            name={'newTvGroupName'}
+            floatingLabelText={'Groupe name'}
+            value={this.state.creationGroupName}
+          />
+          <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+            <RaisedButton label="Create Group" onTouchTap={this.createGroup} />
           </div>
         </div>
         <Divider />

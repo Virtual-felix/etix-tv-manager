@@ -42,17 +42,19 @@ func main() {
 	db.AutoMigrate(&model.Timeline{})
 	db.AutoMigrate(&model.TimelineItem{})
 	db.AutoMigrate(&model.Television{})
+	db.AutoMigrate(&model.GroupTelevision{})
 	db.AutoMigrate(&model.Planification{})
 
 	// initialize controllers
 	timelineRepo := repository.NewORMTimelineRepository(db)
 	timelineItemRepo := repository.NewORMTimelineItemRepository(db)
 	televisionRepo := repository.NewORMTelevisionRepository(db)
+	groupTelevisionRepo := repository.NewORMGroupTelevisionRepository(db)
 	planificationRepo := repository.NewORMPlanificationRepository(db)
 
 	s3Service := service.NewS3(s3Client)
 	timelineService := service.NewTimeline(timelineRepo, timelineItemRepo)
-	televisionService := service.NewTelevision(televisionRepo)
+	televisionService := service.NewTelevision(televisionRepo, groupTelevisionRepo)
 	planificationService := service.NewPlanification(planificationRepo)
 
 	mediaController := controller.NewMedias(s3Service)
@@ -83,8 +85,11 @@ func main() {
 
 	e.GET("/televisions", televisionController.List)
 	e.POST("/television", televisionController.Create)
-	e.PUT("/television", televisionController.Update)
-	e.DELETE("/television", televisionController.Delete)
+	e.PUT("/television/:id", televisionController.Update)
+	e.DELETE("/television/:id", televisionController.Delete)
+
+	e.GET("/television/groups", televisionController.ListGroup)
+	e.POST("/television/group", televisionController.CreateGroup)
 
 	e.GET("/planifications/:id", planificationController.List)
 	e.GET("/planifications/tv", planificationController.ListForTv)
