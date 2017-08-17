@@ -33,6 +33,7 @@ class App extends Component {
 
   componentWillMount = () => {
     this.refreshPlanifications();
+    this.updateWorker();
   };
 
   refreshPlanifications = () => {
@@ -44,6 +45,12 @@ class App extends Component {
           const now = moment();
 
           if (start - now < 0 && end - now > 0) {
+            if (
+              this.state.selectedPlanification &&
+              response.data[i].id == this.state.selectedPlanification.id
+            ) {
+              break;
+            }
             this.setState(state => {
               return { selectedPlanification: response.data[i] };
             }, this.refreshTimelineItems);
@@ -69,6 +76,13 @@ class App extends Component {
       .catch(error => {
         console.log('Get all timeline items: ', error);
       });
+  };
+
+  updateWorker = () => {
+    setTimeout(() => {
+      this.refreshPlanifications();
+      this.updateWorker();
+    }, 60 * 1000);
   };
 
   render() {
