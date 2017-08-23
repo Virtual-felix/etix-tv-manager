@@ -6,18 +6,18 @@ import TimelineCreationArea from '../components/elements/TimelineCreationArea';
 // API Requests
 
 const GetAllFiles = () => {
-  return window.httpClient.get('/media/list/');
+  return window.httpClient.get('/restricted/media/list/');
 };
 
 const GetAllTimelines = () => {
-  return window.httpClient.get('/timeline');
+  return window.httpClient.get('/restricted/timeline');
 };
 
 const GetAllItems = timelineID => {
   const data = new FormData();
   data.append('tid', timelineID);
 
-  return window.httpClient.get('timeline/' + timelineID + '/items');
+  return window.httpClient.get('/restricted/timeline/' + timelineID + '/items');
 };
 
 const AddFileToTimeline = (timelineID, name, index) => {
@@ -25,7 +25,7 @@ const AddFileToTimeline = (timelineID, name, index) => {
   data.append('name', name);
   data.append('index', index);
 
-  return window.httpClient.post('/timeline/' + timelineID + '/item', data);
+  return window.httpClient.post('/restricted/timeline/' + timelineID + '/item', data);
 };
 
 // Main

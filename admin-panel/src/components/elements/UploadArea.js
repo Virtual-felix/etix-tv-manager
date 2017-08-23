@@ -14,7 +14,7 @@ const UploadFile = (file, setProgress) => {
   data.append('size', file.size);
   data.append('file', file);
 
-  return window.httpClient.post('/upload', data, {
+  return window.httpClient.post('/restricted/upload', data, {
     onUploadProgress: event => {
       setProgress(event.loaded, event.total);
     },

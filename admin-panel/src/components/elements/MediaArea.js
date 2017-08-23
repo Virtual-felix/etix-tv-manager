@@ -31,7 +31,7 @@ const DeleteFile = name => {
   const data = new FormData();
   data.append('name', name);
 
-  return window.httpClient.put('/media', data);
+  return window.httpClient.put('/restricted/media', data);
 };
 
 const RenameFile = (name, newName) => {
@@ -39,7 +39,7 @@ const RenameFile = (name, newName) => {
   data.append('name', name);
   data.append('newname', newName);
 
-  return window.httpClient.put('/media/rename', data);
+  return window.httpClient.put('/restricted/media/rename', data);
 };
 
 // Helper

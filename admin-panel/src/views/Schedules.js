@@ -19,15 +19,15 @@ import moment from 'moment';
 // API Requests;
 
 const GetAllTelevisions = () => {
-  return window.httpClient.get('/televisions');
+  return window.httpClient.get('/restricted/televisions');
 };
 
 const GetAllTimelines = () => {
-  return window.httpClient.get('/timeline');
+  return window.httpClient.get('/restricted/timeline');
 };
 
 const GetPlanifications = tvid => {
-  return window.httpClient.get('/planifications/' + tvid);
+  return window.httpClient.get('/restricted/planifications/' + tvid);
 };
 
 const CreatePlanification = (tvid, tiid, startAt, endAt) => {
@@ -40,7 +40,7 @@ const CreatePlanification = (tvid, tiid, startAt, endAt) => {
   data.append('startat', fmtStart.unix());
   data.append('endat', fmtEnd.unix());
 
-  return window.httpClient.post('/planification', data);
+  return window.httpClient.post('/restricted/planification', data);
 };
 
 const UpdatePlanification = (id, tvid, tiid, startAt, endAt) => {
@@ -53,12 +53,11 @@ const UpdatePlanification = (id, tvid, tiid, startAt, endAt) => {
   data.append('startat', fmtStart.unix());
   data.append('endat', fmtEnd.unix());
 
-  return window.httpClient.put('/planification/' + id, data);
+  return window.httpClient.put('/restricted/planification/' + id, data);
 };
 
 const DeletePlanification = id => {
-  console.log(id);
-  return window.httpClient.delete('planification/' + id);
+  return window.httpClient.delete('/restricted/planification/' + id);
 };
 
 // Row Component
