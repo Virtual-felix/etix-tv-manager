@@ -16,6 +16,10 @@ const GetPlanifications = () => {
   return window.httpClient.get('/planifications/tv');
 };
 
+const GetTimeline = id => {
+  return window.httpClient.get('/timeline/' + id);
+};
+
 // Main
 
 class App extends Component {
@@ -26,6 +30,7 @@ class App extends Component {
       timelines: [],
       items: [],
       selectedPlanification: undefined,
+      summary: false,
     };
   }
 
@@ -71,10 +76,26 @@ class App extends Component {
       .then(response => {
         this.setState(state => {
           return { items: response.data };
+        }, this.refreshTimeline);
+      })
+      .catch(error => {
+        console.log('Get all timeline items failed: ', error);
+      });
+  };
+
+  refreshTimeline = () => {
+    if (!this.state.selectedPlanification) {
+      return;
+    }
+    GetTimeline(this.state.selectedPlanification.tiid)
+      .then(response => {
+        console.log(response);
+        this.setState(state => {
+          return { summary: response.data.summary };
         });
       })
       .catch(error => {
-        console.log('Get all timeline items: ', error);
+        console.log('Get timeline failed: ', error);
       });
   };
 
@@ -86,9 +107,10 @@ class App extends Component {
   };
 
   render() {
+    console.log(this.state.items);
     return (
       <div className="App" style={sContainer}>
-        <TimelineViewer items={this.state.items} />
+        <TimelineViewer items={this.state.items} summary={this.state.summary} />
       </div>
     );
   }
@@ -101,5 +123,5 @@ export default App;
 const sContainer = {
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-around',
+  justifyContent: 'start',
 };

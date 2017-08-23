@@ -32,6 +32,22 @@ func (tc *Timeline) List(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, timelines)
 }
 
+// FindOne return a timeline described by its ID.
+func (tc *Timeline) FindOne(ctx echo.Context) error {
+	ID, errID := paramToIntHelper(ctx.Param("id"))
+	if errID != nil {
+		log.Println(errID)
+		return ctx.String(http.StatusBadRequest, errID.Error())
+	}
+
+	t, err := tc.ts.Get(uint(ID))
+	if err != nil {
+		log.Println(err)
+		return ctx.String(http.StatusBadRequest, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, t)
+}
+
 // Create creates a new timeline.
 func (tc *Timeline) Create(ctx echo.Context) error {
 	name := ctx.FormValue("name")

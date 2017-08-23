@@ -74,6 +74,7 @@ func main() {
 	e.PUT("/media/rename", mediaController.Rename)
 
 	e.POST("/timeline", timelineController.Create)
+	e.GET("/timeline/:id", timelineController.FindOne)
 	e.PUT("/timeline/:id", timelineController.Update)
 	e.DELETE("/timeline/:id", timelineController.Delete)
 	e.GET("/timeline", timelineController.List)
