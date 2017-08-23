@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppTheme from './constants/DesignApp.js';
 import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import LeftMenu from './components/LeftMenu';
 import NavItems from './constants/LeftNavigationItems';
 import FilesView from './views/Files';
 import TelevisionsView from './views/Television';
 import SchedulesView from './views/Schedules';
+import LoginView from './views/Login';
 
 import { Route } from 'react-router-dom';
 import './App.css';
@@ -25,6 +28,11 @@ class App extends Component {
 
   handleToggle = () => this.setState({ open: !this.state.open });
 
+  disconnect = () => {
+    sessionStorage.setItem('token', undefined);
+    window.location.replace('/login');
+  };
+
   render() {
     const contentStyle = {
       marginLeft: 70,
@@ -41,8 +49,13 @@ class App extends Component {
           {/* TOP BAR */}
           <AppBar
             title="Etix TV Manager"
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            iconElementRight={
+              <IconButton>
+                <NavigationClose />
+              </IconButton>
+            }
             onLeftIconButtonTouchTap={this.handleToggle}
+            onRightIconButtonTouchTap={this.disconnect}
           />
 
           {/* LEFT MENU */}
@@ -54,6 +67,7 @@ class App extends Component {
             <Route path="/timelines" component={Timelines} />
             <Route path="/schedule" component={SchedulesView} />
             <Route path="/tv" component={TelevisionsView} />
+            <Route path="/login" component={LoginView} />
           </div>
         </div>
       </MuiThemeProvider>

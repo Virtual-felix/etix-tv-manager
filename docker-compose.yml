@@ -11,6 +11,29 @@ services:
     volumes:
       - "./db/data:/var/lib/mysql"
 
+  ldap-server:
+    image: osixia/openldap:1.1.9
+    environment:
+      - "LDAP_ORGANISATION=tvetix"
+      - "LDAP_DOMAIN=tvetix.com"
+      - "LDAP_ADMIN_PASSWORD=toto42sh"
+      - "LDAP_READONLY_USER=true"
+      - "LDAP_READONLY_USER_USERNAME=tv"
+      - "LDAP_READONLY_USER_PASSWORD=etix"
+      - "LDAP_TLS=false"
+    volumes:
+      - "./ldap/database:/var/lib/ldap"
+      - "./ldap/config:/etc/ldap/slapd.d"
+
+  ldap-php-admin:
+    image: osixia/phpldapadmin:0.7.0
+    environment:
+      - "PHPLDAPADMIN_LDAP_HOSTS=ldap"
+    links:
+      - "ldap-server:ldap"
+    ports:
+      - "6443:443"
+
   admin-panel:
     build:
       context: ./admin-panel/
@@ -61,6 +84,8 @@ services:
       - "4244:4244"
     links:
       - mysqldb
+      - "admin-panel:panel"
+      - "ldap-server:ldap"
     depends_on:
       - "s3"
     volumes:

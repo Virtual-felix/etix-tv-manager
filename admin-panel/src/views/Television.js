@@ -16,7 +16,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 // API Requests
 
 const GetAllTelevisions = () => {
-  return window.httpClient.get('/televisions');
+  return window.httpClient.get('/restricted/televisions');
 };
 
 const CreateTelevision = (name, ip) => {
@@ -24,7 +24,7 @@ const CreateTelevision = (name, ip) => {
   data.append('name', name);
   data.append('ip', ip);
 
-  return window.httpClient.post('/television', data);
+  return window.httpClient.post('/restricted/television', data);
 };
 
 const UpdateTelevision = (id, name, ip, gid) => {
@@ -33,18 +33,18 @@ const UpdateTelevision = (id, name, ip, gid) => {
   data.append('ip', ip);
   data.append('gid', gid);
 
-  return window.httpClient.put('/television/' + id, data);
+  return window.httpClient.put('/restricted/television/' + id, data);
 };
 
 const GetAllGroups = () => {
-  return window.httpClient.get('/television/groups');
+  return window.httpClient.get('/restricted/television/groups');
 };
 
 const CreateGroup = name => {
   const data = new FormData();
   data.append('name', name);
 
-  return window.httpClient.post('/television/group', data);
+  return window.httpClient.post('/restricted/television/group', data);
 };
 
 // Row Component

@@ -17,7 +17,7 @@ const CreateTimeline = name => {
   const data = new FormData();
   data.append('name', name);
 
-  return window.httpClient.post('/timeline', data);
+  return window.httpClient.post('/restricted/timeline', data);
 };
 
 const UpdateTimeline = (id, name, summary) => {
@@ -25,7 +25,7 @@ const UpdateTimeline = (id, name, summary) => {
   data.append('name', name);
   data.append('summary', summary);
 
-  return window.httpClient.put('/timeline/' + id, data);
+  return window.httpClient.put('/restricted/timeline/' + id, data);
 };
 
 const UpdateTimelineItem = (name, category, time, index, id, tid) => {
@@ -36,11 +36,11 @@ const UpdateTimelineItem = (name, category, time, index, id, tid) => {
   data.append('index', index);
   data.append('tid', tid);
 
-  return window.httpClient.put('/timeline/item/' + id, data);
+  return window.httpClient.put('/restricted/timeline/item/' + id, data);
 };
 
 const DeleteTimelineItem = id => {
-  return window.httpClient.delete('timeline/item/' + id);
+  return window.httpClient.delete('/restricted/timeline/item/' + id);
 };
 
 // Main

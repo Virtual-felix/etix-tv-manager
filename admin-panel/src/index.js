@@ -7,9 +7,29 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
+var token = sessionStorage.getItem('token');
+if (!token) {
+  token = 'xxx';
+}
+
 // Initialize the request client.
 window.httpClient = Axios.create({
   baseURL: 'http://127.0.0.1:4244',
+  withCredentials: true,
+  headers: {
+    Authorization: 'Bearer ' + token,
+  },
+  transformResponse: data => {
+    if (data === '' || data === undefined) {
+      return data;
+    }
+    var obj = JSON.parse(data);
+    if (obj.message === 'Unauthorized' && window.location.pathname !== '/login') {
+      sessionStorage.setItem('token', undefined);
+      window.location.replace('/login');
+    }
+    return obj;
+  },
 });
 
 // Needed for onTouchTap
