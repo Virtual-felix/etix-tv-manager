@@ -73,10 +73,7 @@ func main() {
 	e := echo.New()
 
 	// API configuration
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"http://127.0.0.1:3000"},
-		AllowCredentials: true,
-	}))
+	e.Use(middleware.CORS())
 
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
@@ -107,12 +104,16 @@ func main() {
 	r.POST("/television/group", televisionController.CreateGroup)
 
 	r.GET("/planifications/:id", planificationController.List)
-	r.GET("/planifications/tv", planificationController.ListForTv)
 	r.POST("/planification", planificationController.Create)
 	r.PUT("/planification/:id", planificationController.Update)
 	r.DELETE("/planification/:id", planificationController.Delete)
 
 	e.POST("/login", authController.Login)
+
+	// Routes descriptions for Viewer
+	e.GET("/planifications/tv", planificationController.ListForTv)
+	e.GET("/timeline/:id", timelineController.FindOne)
+	e.GET("/timeline/:tid/items", timelineController.ListItems)
 
 	// Run
 	e.Logger.Fatal(e.Start(":" + PORT))
