@@ -13,6 +13,12 @@ const Video = props => {
   return <Player src={BASE_URL + props.src} autoPlay={true} muted={true} />;
 };
 
+// Helper
+
+const uniqueArray = a => [...new Set(a)];
+
+// Main
+
 export default class TimelineViewer extends Component {
   constructor(props) {
     super(props);
@@ -21,24 +27,30 @@ export default class TimelineViewer extends Component {
       img: '',
       timeoutId: undefined,
       version: undefined,
+      categories: [],
+      index: 0,
     };
   }
 
   componentWillReceiveProps = nextProps => {
+    var categories = [];
     const items = nextProps.items.map(item => {
       var arr = item.name.split('.');
+      categories.push(item.category);
       var type = arr[arr.length - 1];
+      item.type = type;
       if (type === 'mp4' || type === 'mkv') {
-        item.html = Video({ src: item.name });
+        item.html = Video({ src: item.name, type: type });
       } else {
         item.html = Image({ src: item.name });
       }
       return item;
     });
+    categories = uniqueArray(categories);
     const version = Date.now();
     this.setState(
       state => {
-        return { version: version };
+        return { version: version, categories: categories };
       },
       () => {
         this.loop(0, items, version);
@@ -54,7 +66,7 @@ export default class TimelineViewer extends Component {
       index = 0;
     }
     this.setState(state => {
-      return { img: timeline[index] };
+      return { img: timeline[index], index: index };
     });
 
     setTimeout(() => {
@@ -65,15 +77,52 @@ export default class TimelineViewer extends Component {
   render() {
     return (
       <div className={'viewer'}>
-        {this.state.img.html}
+        <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 1, width: '100%' }}>
+          {this.props.summary &&
+            <div style={sSummary}>
+              {this.state.categories.map(c => {
+                const active = c === this.props.items[this.state.index].category ? true : false;
+                return (
+                  <div style={sCategory} key={c}>
+                    <div style={{ color: active ? 'white' : 'grey' }}>
+                      {' '}{c}{' '}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>}
+        </div>
+        {
+          <div style={{ top: 0, left: 0, zIndex: 0, width: '100%' }}>
+            {this.state.img.type === 'mp4' || this.state.img.type === 'mkv'
+              ? Video({ src: this.state.img.name, type: this.state.img.type })
+              : Image({ src: this.state.img.name })}
+          </div>
+        }
       </div>
     );
   }
 }
 
-// Inline style
+// Inline stylew
 
 const sImage = {
+  maxWidth: '100%',
+  maxHeight: '100%',
+};
+
+const sSummary = {
   width: '100%',
-  height: 'auto',
+  height: 60,
+  background: 'rgba(0, 0, 0, 0.5)',
+  zIndex: 42,
+  display: 'flex',
+  justifyContent: 'center',
+};
+
+const sCategory = {
+  marginTop: 'auto',
+  marginBottom: 'auto',
+  marginRight: 20,
+  marginLeft: 20,
 };

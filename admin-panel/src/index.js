@@ -15,7 +15,6 @@ if (!token) {
 // Initialize the request client.
 window.httpClient = Axios.create({
   baseURL: 'http://127.0.0.1:4244',
-  withCredentials: true,
   headers: {
     Authorization: 'Bearer ' + token,
   },

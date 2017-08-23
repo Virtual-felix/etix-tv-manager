@@ -44,6 +44,7 @@ func (tc *Planification) List(ctx echo.Context) error {
 // ListForTv list all planifications for a TV.
 func (tc *Planification) ListForTv(ctx echo.Context) error {
 	ip := ctx.RealIP()
+	log.Println("IP REQUESTING PLANIFICATIONS:", ip)
 
 	tv, err := tc.ts.FindByIP(ip)
 	if err != nil {
