@@ -6,7 +6,7 @@ import App from './App';
 
 // Initialize the request client.
 window.httpClient = Axios.create({
-  baseURL: 'http://127.0.0.1:4244',
+  baseURL: 'http://' + process.env.REACT_APP_API_URL + ':' + process.env.REACT_APP_API_PORT,
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));

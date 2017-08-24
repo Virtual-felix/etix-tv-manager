@@ -9,12 +9,12 @@ import './index.css';
 
 var token = sessionStorage.getItem('token');
 if (!token) {
-  token = 'xxx';
+  token = 'NOT CONNECTED';
 }
 
 // Initialize the request client.
 window.httpClient = Axios.create({
-  baseURL: 'http://127.0.0.1:4244',
+  baseURL: 'http://' + process.env.REACT_APP_API_URL + ':' + process.env.REACT_APP_API_PORT,
   headers: {
     Authorization: 'Bearer ' + token,
   },

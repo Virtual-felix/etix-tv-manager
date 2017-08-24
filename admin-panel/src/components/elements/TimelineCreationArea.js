@@ -57,7 +57,6 @@ export default class TimelineCreationArea extends Component {
   createTimeline = () => {
     CreateTimeline(this.state.creationName)
       .then(response => {
-        console.log('coucou');
         this.setState(state => {
           return { creationName: '' };
         });

@@ -4,22 +4,22 @@ services:
   mysqldb:
     image: mysql:latest
     environment:
-      - "MYSQL_ROOT_PASSWORD=gotest"
-      - "MYSQL_DATABASE=gotest"
-      - "MYSQL_USER=gotest"
-      - "MYSQL_PASSWORD=gotest"
+      - "MYSQL_ROOT_PASSWORD=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
+      - "MYSQL_DATABASE=etixtv"
+      - "MYSQL_USER=etix"
+      - "MYSQL_PASSWORD=HS4SFCA35UZHNW3YBHOT"
     volumes:
       - "./db/data:/var/lib/mysql"
 
   ldap-server:
     image: osixia/openldap:1.1.9
     environment:
-      - "LDAP_ORGANISATION=tvetix"
-      - "LDAP_DOMAIN=tvetix.com"
-      - "LDAP_ADMIN_PASSWORD=toto42sh"
+      - "LDAP_ORGANISATION=etixtv"
+      - "LDAP_DOMAIN=etixtv.com"
+      - "LDAP_ADMIN_PASSWORD=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
       - "LDAP_READONLY_USER=true"
-      - "LDAP_READONLY_USER_USERNAME=tv"
-      - "LDAP_READONLY_USER_PASSWORD=etix"
+      - "LDAP_READONLY_USER_USERNAME=etix"
+      - "LDAP_READONLY_USER_PASSWORD=HS4SFCA35UZHNW3YBHOT"
       - "LDAP_TLS=false"
     volumes:
       - "./ldap/database:/var/lib/ldap"
@@ -39,6 +39,11 @@ services:
       context: ./admin-panel/
       dockerfile: Dockerfile
     image: etixtv/admin-panel
+    environment:
+      - "REACT_APP_API_URL=127.0.0.1"
+      - "REACT_APP_API_PORT=4244"
+      - "REACT_APP_STATIC_URL=127.0.0.1"
+      - "REACT_APP_STATIC_PORT=8080"
     ports:
       - "3000:3000"
     volumes:
@@ -49,22 +54,27 @@ services:
       context: ./viewer/
       dockerfile: Dockerfile
     image: etixtv/viewer
+    environment:
+      - "REACT_APP_API_URL=127.0.0.1"
+      - "REACT_APP_API_PORT=4244"
+      - "REACT_APP_STATIC_URL=127.0.0.1"
+      - "REACT_APP_STATIC_PORT=8080"
     ports:
       - "3042:3000"
     volumes:
       - "./viewer:/usr/src/app"
+    links:
+      - "api"
+      - "static-provider:static"
 
   s3:
     image: minio/minio
-    ports:
-      - "9001:9000"
     volumes:
       - ./s3/data:/export
       - ./s3/config:/root/.minio
     environment:
       - "MINIO_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT"
       - "MINIO_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
-      # - MINIO_REGION="luxembourg"
     command: server /export
 
   static-provider:
@@ -79,15 +89,33 @@ services:
       context: ./api/
       dockerfile: Dockerfile
     image: etixtv/api
+    hostname: "api"
     ports:
       - "4242:4242"
       - "4244:4244"
+    environment:
+      - "DATABASE_URL=mysqldb"
+      - "DATABASE_PORT=3306"
+      - "DATABASE_USER=etix"
+      - "DATABASE_PASSWORD=HS4SFCA35UZHNW3YBHOT"
+      - "DATABASE_NAME=etixtv"
+      - "LDAP_URL=ldap"
+      - "LDAP_PORT=389"
+      - "LDAP_READONLY_USER_USERNAME=etix"
+      - "LDAP_READONLY_USER_PASSWORD=HS4SFCA35UZHNW3YBHOT"
+      - "LDAP_DOMAIN=etixtv.com"
+      - "S3_URL=mediaserver"
+      - "S3_PORT=9000"
+      - "S3_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT"
+      - "S3_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
     links:
-      - mysqldb
-      - "admin-panel:panel"
+      - "mysqldb"
       - "ldap-server:ldap"
+      - "s3:mediaserver"
     depends_on:
       - "s3"
+      - "mysqldb"
+      - "ldap-server"
     volumes:
       - "./api:/go/src/etix-tv-manager/api"
     command: gin -i -p 4244 -a 4242
