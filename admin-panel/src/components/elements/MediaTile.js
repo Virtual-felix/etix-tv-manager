@@ -11,6 +11,9 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AppTheme from '../../constants/DesignApp.js';
 import './MediaTile.css';
 
+const BASE_URL =
+  'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
+
 export default class MediaTile extends Component {
   render() {
     var items = [...this.props.item.menuItems];
@@ -63,7 +66,7 @@ export default class MediaTile extends Component {
           style={sFolderMenu}
         />
         <img
-          src={'http://127.0.0.1:8080/' + this.props.item.name}
+          src={BASE_URL + this.props.item.name}
           alt={this.props.item.name}
           style={sContentImage}
         />

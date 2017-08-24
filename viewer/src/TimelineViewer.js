@@ -3,7 +3,8 @@ import './TimelineViewer.css';
 import { Player } from 'video-react';
 import '../node_modules/video-react/dist/video-react.css';
 
-const BASE_URL = 'http://127.0.0.1:8080/';
+const BASE_URL =
+  'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
 
 const Image = props => {
   return <img src={BASE_URL + props.src} alt={props.src} style={sImage} />;

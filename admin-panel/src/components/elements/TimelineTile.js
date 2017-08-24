@@ -9,7 +9,8 @@ import HardwareLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import HardwareRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import AppTheme from '../../constants/DesignApp.js';
 
-const BASE_URL = 'http://127.0.0.1:8080/';
+const BASE_URL =
+  'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
 
 export default class TimelineTile extends Component {
   handleCategorieChange = (event, key, payload) => {
