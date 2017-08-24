@@ -11,18 +11,20 @@ import (
 type Ldap struct {
 	readonlyUser     string
 	readonlyPassword string
+	binddn           string
 	conn             *ldap.Conn
 }
 
 // NewLdap creates a new ldap service for authenticating.
-func NewLdap(readonlyUser, readonlyPassword string) *Ldap {
-	conn, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", "ldap", 389))
+func NewLdap(url, port, binddn, readonlyUser, readonlyPassword string) *Ldap {
+	conn, err := ldap.Dial("tcp", fmt.Sprintf("%s:%s", url, port))
 	if err != nil {
 		log.Fatal(err)
 	}
 	return &Ldap{
 		readonlyUser:     readonlyUser,
 		readonlyPassword: readonlyPassword,
+		binddn:           binddn,
 		conn:             conn,
 	}
 }
@@ -40,7 +42,7 @@ func (l *Ldap) BindReadOnlyAccount() error {
 func (l *Ldap) CheckCredentials(username, password string) error {
 	// Search for the given username
 	searchRequest := ldap.NewSearchRequest(
-		"dc=tvetix,dc=com",
+		l.binddn,
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
 		fmt.Sprintf("(&(uid=%s))", username),
 		[]string{"dn"},

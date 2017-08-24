@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -14,17 +17,17 @@ import (
 	"etix-tv-manager/api/service"
 )
 
-// NOTE: To use when making env var config.
-// dsn := fmt.Sprintf(
-// 	"%s:%s@db:3306/%s?charset=utf8&parseTime=True&loc=Local",
-// 	os.Getenv("DB_USER"),
-// 	os.Getenv("DB_PASS"),
-// 	os.Getenv("DB_NAME"),
-// )
-
 func main() {
 	// Database client
-	db, errDB := gorm.Open("mysql", "gotest:gotest@tcp(mysqldb:3306)/gotest?charset=utf8&parseTime=True&loc=Local")
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		os.Getenv("DATABASE_USER"),
+		os.Getenv("DATABASE_PASSWORD"),
+		os.Getenv("DATABASE_URL"),
+		os.Getenv("DATABASE_PORT"),
+		os.Getenv("DATABASE_NAME"),
+	)
+	db, errDB := gorm.Open("mysql", dsn)
 	if errDB != nil {
 		log.Println(errDB)
 		return
@@ -32,13 +35,19 @@ func main() {
 	defer db.Close()
 
 	// S3 client
-	s3Client, errS3 := service.NewS3Client("172.19.0.1:9001", "HS4SFCA35UZHNW3YBHOT", "k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH", false)
+	s3sn := fmt.Sprintf("%s:%s", os.Getenv("S3_URL"), os.Getenv("S3_PORT"))
+	s3Client, errS3 := service.NewS3Client(s3sn, os.Getenv("S3_ACCESS_KEY"), os.Getenv("S3_SECRET_KEY"), false)
 	if errS3 != nil {
 		log.Println(errS3)
 		return
 	}
+	log.Println("LDAP connected")
 
-	ldapClient := service.NewLdap("cn=tv,dc=tvetix,dc=com", "etix")
+	// LDAP client
+	domainName := strings.Split(os.Getenv("LDAP_DOMAIN"), ".")
+	binddn := fmt.Sprintf("dc=%s,dc=%s", strings.Join(domainName[:len(domainName)-1], "."), domainName[len(domainName)-1])
+	lbinddn := fmt.Sprintf("cn=%s,%s", os.Getenv("LDAP_READONLY_USER_USERNAME"), binddn)
+	ldapClient := service.NewLdap(os.Getenv("LDAP_URL"), os.Getenv("LDAP_PORT"), binddn, lbinddn, os.Getenv("LDAP_READONLY_USER_PASSWORD"))
 	errLdap := ldapClient.BindReadOnlyAccount()
 	if errLdap != nil {
 		log.Println(errLdap)
