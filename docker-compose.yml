@@ -63,9 +63,6 @@ services:
       - "3042:3000"
     volumes:
       - "./viewer:/usr/src/app"
-    links:
-      - "api"
-      - "static-provider:static"
 
   s3:
     image: minio/minio
