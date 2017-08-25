@@ -10,9 +10,24 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AppTheme from '../../constants/DesignApp.js';
 import './MediaTile.css';
+import VideoPng from './video.png';
 
 const BASE_URL =
   'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
+
+// Helper
+
+const getExt = name => {
+  var arr = name.split('.');
+  return arr[arr.length - 1];
+};
+
+const formatName = name => {
+  var arr = name.split('/');
+  return arr[arr.length - 1];
+};
+
+// Main
 
 export default class MediaTile extends Component {
   render() {
@@ -66,12 +81,15 @@ export default class MediaTile extends Component {
           style={sFolderMenu}
         />
         <img
-          src={BASE_URL + this.props.item.name}
+          src={getExt(this.props.item.name) === 'mp4' ? VideoPng : BASE_URL + this.props.item.name}
           alt={this.props.item.name}
           style={sContentImage}
         />
         <div style={sCaption}>
-          <InlineInputEdit text={this.props.item.name} onChange={this.props.item.onTextChange} />
+          <InlineInputEdit
+            text={formatName(this.props.item.name)}
+            onChange={this.props.item.onTextChange}
+          />
         </div>
       </Paper>
     );

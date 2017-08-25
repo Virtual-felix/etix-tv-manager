@@ -11,11 +11,6 @@ import SchedulesView from './views/Schedules';
 import { Route } from 'react-router-dom';
 import './App.css';
 
-const Timelines = () =>
-  <div>
-    <h2>Timelines</h2>
-  </div>;
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +46,6 @@ class App extends Component {
           {/* MAIN CONTENT */}
           <div style={contentStyle}>
             <Route exact path="/" component={FilesView} />
-            <Route path="/timelines" component={Timelines} />
             <Route path="/schedule" component={SchedulesView} />
             <Route path="/tv" component={TelevisionsView} />
           </div>

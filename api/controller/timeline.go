@@ -118,7 +118,7 @@ func (tc *Timeline) CreateItems(ctx echo.Context) error {
 		return ctx.String(http.StatusBadRequest, errIndex.Error())
 	}
 
-	err = tc.ts.CreateItem(uint(tID), name, "unselected", 0, int(index))
+	err = tc.ts.CreateItem(uint(tID), name, "Etix TV", 3, int(index))
 	if err != nil {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())

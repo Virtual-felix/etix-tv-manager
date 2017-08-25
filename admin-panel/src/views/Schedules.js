@@ -61,19 +61,28 @@ const DeletePlanification = id => {
   return window.httpClient.delete('planification/' + id);
 };
 
+// Helper
+
+const formatDate = date => {
+  return moment(date).format('MMMM Do YYYY');
+};
+
 // Row Component
 
 const Row = props => {
+  const start = moment(props.start).format('MMMM Do YYYY, h:mm a');
+  const end = moment(props.end).format('MMMM Do YYYY, h:mm a');
+
   return (
     <TableRow>
       <TableRowColumn>
         {props.name}
       </TableRowColumn>
       <TableRowColumn>
-        {props.start}
+        {start}
       </TableRowColumn>
       <TableRowColumn>
-        {props.end}
+        {end}
       </TableRowColumn>
       <TableRowColumn>
         <RaisedButton
@@ -165,7 +174,6 @@ export default class SchedulesView extends Component {
   };
 
   handleStartDateSelection = (e, date) => {
-    const timepicker = this.refs.timepicker;
     this.setState(
       state => {
         return { startAt: date };
@@ -182,7 +190,6 @@ export default class SchedulesView extends Component {
   };
 
   handleEndDateSelection = (e, date) => {
-    const timepicker = this.refs.timepicker;
     this.setState(
       state => {
         return { endAt: date };
@@ -254,65 +261,73 @@ export default class SchedulesView extends Component {
 
     return (
       <div>
-        <SelectField
-          floatingLabelText="Television"
-          value={
-            this.state.televisions.length > 0
-              ? this.state.televisions[this.state.selectedTelevision].name
-              : ''
-          }
-          onChange={this.handleTelevisionSelection}
-          children={televisions}
-        />
-        <Divider />
-        <div>
-          <div>
-            <DatePicker
-              autoOk={true}
-              onChange={this.handleStartDateSelection}
-              hintText="Starting date"
-              value={this.state.startAt}
-            />
-            <TimePicker
-              ref="timepickerstart"
-              style={{ display: 'none' }}
-              onChange={this.handleStartTimeSelection}
-              name={'time'}
-              value={this.state.startAt}
+        <div style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <SelectField
+              floatingLabelText="Television"
+              value={
+                this.state.televisions.length > 0
+                  ? this.state.televisions[this.state.selectedTelevision].name
+                  : ''
+              }
+              onChange={this.handleTelevisionSelection}
+              children={televisions}
             />
           </div>
-          <div>
-            <DatePicker
-              autoOk={true}
-              onChange={this.handleEndDateSelection}
-              hintText="Ending date"
-              value={this.state.endAt}
-            />
-            <TimePicker
-              ref="timepickerend"
-              style={{ display: 'none' }}
-              onChange={this.handleEndTimeSelection}
-              name={'time'}
-              value={this.state.endAt}
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <div>
+              <DatePicker
+                autoOk={true}
+                onChange={this.handleStartDateSelection}
+                hintText="Starting date"
+                value={this.state.startAt}
+                formatDate={formatDate}
+              />
+              <TimePicker
+                ref="timepickerstart"
+                style={{ display: 'none' }}
+                onChange={this.handleStartTimeSelection}
+                name={'time'}
+                value={this.state.startAt}
+              />
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <div>
+              <DatePicker
+                autoOk={true}
+                onChange={this.handleEndDateSelection}
+                hintText="Ending date"
+                value={this.state.endAt}
+                formatDate={formatDate}
+              />
+              <TimePicker
+                ref="timepickerend"
+                style={{ display: 'none' }}
+                onChange={this.handleEndTimeSelection}
+                name={'time'}
+                value={this.state.endAt}
+              />
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <SelectField
+              floatingLabelText="Timeline"
+              value={
+                this.state.timelines.length > 0
+                  ? this.state.timelines[this.state.selectedTimeline].name
+                  : ''
+              }
+              onChange={this.handleTimelineSelection}
+              children={timelines}
             />
           </div>
-        </div>
-        <Divider />
-        <div>
-          <SelectField
-            floatingLabelText="Timeline"
-            value={
-              this.state.timelines.length > 0
-                ? this.state.timelines[this.state.selectedTimeline].name
-                : ''
-            }
-            onChange={this.handleTimelineSelection}
-            children={timelines}
-          />
-        </div>
-        <Divider />
-        <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-          <RaisedButton label="Create" onTouchTap={this.createPlanification} />
+          <div style={{ display: 'flex', justifyContent: 'space-around', margin: 10 }}>
+            <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+              <RaisedButton label="Create" onTouchTap={this.createPlanification} />
+            </div>
+          </div>
+          <Divider />
         </div>
         <div>
           <Table selectable={false}>

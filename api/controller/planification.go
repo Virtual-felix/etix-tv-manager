@@ -51,6 +51,9 @@ func (tc *Planification) ListForTv(ctx echo.Context) error {
 		log.Println(err)
 		return ctx.String(http.StatusBadRequest, err.Error())
 	}
+	if len(tv) == 0 {
+		return ctx.NoContent(http.StatusOK)
+	}
 	planifications, err := tc.ps.List(tv[0].ID)
 	if err != nil {
 		log.Println(err)

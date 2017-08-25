@@ -159,35 +159,39 @@ export default class TimelineCreationArea extends Component {
     return (
       <Paper style={sContainer}>
         <div style={sOptions}>
-          <SelectField
-            floatingLabelText="Timeline"
-            value={
-              this.props.timelines.length > 0
-                ? this.props.timelines[this.props.selectedTimeline].name
-                : ''
-            }
-            onChange={this.handleTimelineSelection}
-            children={timelines}
-          />
-          <TextField
-            onChange={this.updateNewTimelineName}
-            name={'newTimelineName'}
-            floatingLabelText={'Timeline name'}
-            value={this.state.creationName}
-          />
-          <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <RaisedButton label="Create" onTouchTap={this.createTimeline} />
-          </div>
-          <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <Checkbox
-              checked={
+          <div style={{ display: 'flex' }}>
+            <SelectField
+              floatingLabelText="Timeline"
+              value={
                 this.props.timelines.length > 0
-                  ? this.props.timelines[this.props.selectedTimeline].summary
-                  : false
+                  ? this.props.timelines[this.props.selectedTimeline].name
+                  : ''
               }
-              label="Summary"
-              onCheck={this.updateTimeline}
+              onChange={this.handleTimelineSelection}
+              children={timelines}
             />
+            <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+              <Checkbox
+                checked={
+                  this.props.timelines.length > 0
+                    ? this.props.timelines[this.props.selectedTimeline].summary
+                    : false
+                }
+                label="Summary"
+                onCheck={this.updateTimeline}
+              />
+            </div>
+          </div>
+          <div style={{ display: 'flex' }}>
+            <TextField
+              onChange={this.updateNewTimelineName}
+              name={'newTimelineName'}
+              floatingLabelText={'Timeline name'}
+              value={this.state.creationName}
+            />
+            <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+              <RaisedButton label="Create" onTouchTap={this.createTimeline} />
+            </div>
           </div>
         </div>
         <Divider />
@@ -215,6 +219,7 @@ const sOptions = {
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
+  justifyContent: 'space-around',
 };
 
 const sTimelineGridContainer = {

@@ -8,9 +8,24 @@ import ContentClear from 'material-ui/svg-icons/content/clear';
 import HardwareLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import HardwareRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import AppTheme from '../../constants/DesignApp.js';
+import VideoPng from './video.png';
 
 const BASE_URL =
   'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
+
+// Helper
+
+const getExt = name => {
+  var arr = name.split('.');
+  return arr[arr.length - 1];
+};
+
+const formatName = name => {
+  var arr = name.split('/');
+  return arr[arr.length - 1];
+};
+
+// Main
 
 export default class TimelineTile extends Component {
   handleCategorieChange = (event, key, payload) => {
@@ -85,12 +100,14 @@ export default class TimelineTile extends Component {
         </div>
         <Paper style={sCard}>
           <img
-            src={BASE_URL + this.props.item.name}
+            src={
+              getExt(this.props.item.name) === 'mp4' ? VideoPng : BASE_URL + this.props.item.name
+            }
             alt={this.props.item.name}
             style={sContentImage}
           />
           <div style={sCaption}>
-            {this.props.item.name}
+            {formatName(this.props.item.name)}
           </div>
         </Paper>
       </div>
