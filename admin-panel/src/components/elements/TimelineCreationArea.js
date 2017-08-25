@@ -9,7 +9,15 @@ import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
 
-const categories = ['Welcome', 'Etix Officies', 'Etix Labs', 'Events', 'News'];
+const categories = [
+  'Welcome',
+  'Etix Offices',
+  'Etix Story',
+  'Weather Program',
+  'Etix Labs',
+  'Events',
+  'News',
+];
 
 // API Requests
 
