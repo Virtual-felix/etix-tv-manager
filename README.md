@@ -2,7 +2,7 @@
 
 The project has been made to make a team of HR able to share news, informations, give visibility about all department etc on all public screens (televisions) in the offices of the company. A viewer reachable with a web browser or an Android TV application show images and videos with a configurable speed (like an automated slideshow). An admin panel is provided on which you can upload all your medias, create your slideshow (called 'Timelines'), schedule them at specific dates for each specific televisions.
 
-![alt text](https://github.com/felix-fabrega/etix-tv-manager/blob/develop/demo.gif)
+![viewer gif](https://github.com/felix-fabrega/etix-tv-manager/blob/develop/demo.gif)
 
 The project is made of several parts.
 
@@ -159,3 +159,42 @@ go in the `androidApp/` folder then
 
 run `./build_and_sign.sh`
 It will generate the dpkg file to install on your TV.
+
+## Run sides services in docker
+
+### Run MYSQL
+
+You can use the [official mysql docker container](https://hub.docker.com/_/mysql/):
+
+run
+```
+docker run -e "MYSQL_ROOT_PASSWORD=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH" -e "MYSQL_DATABASE=etixtv"
+-e "MYSQL_USER=etix" -e "MYSQL_PASSWORD=HS4SFCA35UZHNW3YBHOT" -v ./db/data:/var/lib/mysql -d mysql:latest
+```
+
+### Run minio.io
+
+You can use the [official minio.io docker container](https://hub.docker.com/r/minio/minio/):
+
+run
+```
+docker run -p "9000:9000" -v "./s3/data:/export" -v "./s3/config:/root/.minio"
+-e "MINIO_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT" -e "MINIO_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
+minio/minio server /export
+```
+
+### Run LDAP
+
+You can use the [osixia open ldap container](https://github.com/osixia/docker-openldap):
+
+run
+```
+docker run -p "389:389" -e "LDAP_ORGANISATION=etixtv" -e "LDAP_DOMAIN=etixtv.com"
+-e "LDAP_ADMIN_PASSWORD=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH" -e "LDAP_READONLY_USER=true"
+-e "LDAP_READONLY_USER_USERNAME=etix" -e "LDAP_READONLY_USER_PASSWORD=HS4SFCA35UZHNW3YBHOT"
+-e "LDAP_TLS=false" -v "./ldap/database:/var/lib/ldap" -v "./ldap/config:/etc/ldap/slapd.d"
+-d osixia/openldap:1.1.9
+```
+
+
+In all of those command, modify environment variables following your requirement.
