@@ -155,7 +155,9 @@ docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=
 
 ### Build android app
 
-go in the `androidApp/` folder then
+You have to replace the url in `androidApp/app/src/main/java/com/etixlabs/tvmanager/WebviewFragment.java` with the URL of you viewer's host.
+
+then go in the `androidApp/` folder then
 
 run `./build_and_sign.sh`
 It will generate the dpkg file to install on your TV.
