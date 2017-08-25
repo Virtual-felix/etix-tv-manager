@@ -1,21 +1,25 @@
 # etix-tv-manager
 
-Etix TV Manager is an application used to manage all smart television on your network. An admin interface let you upload media such as pictures and videos, manage those medias (rename, delete, sort, make folders etc) then create timelines (using uploaded medias) to display on the televisions of your choice.
+The project has been made to make a team of HR able to share news, informations, give visibility about all department etc on all public screens (televisions) in the offices of the company. A viewer reachable with a web browser or an Android TV application show images and videos with a configurable speed (like an automated slideshow). An admin panel is provided on which you can upload all your medias, create your slideshow (called 'Timelines'), schedule them at specific dates for each specific televisions.
+
+![alt text](https://github.com/felix-fabrega/etix-tv-manager/blob/develop/demo.gif)
 
 The project is made of several parts.
 
 ### Admin panel
 
 It is a front end on which you have to login with LDAP credentials.
-Then, a first view let you upload medias (images, videos) and manage them. With those media you can create what is called "Timelines" which are bunch of medias, where for each you can chose a category and a time to display.
+A view let you upload medias (images, videos) and manage them. You can create timelines on it, specifying for each media a time to display, its order in the slideshow and its category.
+The category can be displayed on the top of the slideshow (as in the example above), but it is optional.
 
-Another view let you register the televisions of your choice with a name and their IP.
+Another view let you register the televisions of your choice with a name and their IP. It will make you able to select on which televisions (or IP) you want to schedule a slideshow.
 
-The last view make you able to schedule timelines on the televisions at during specified dates.
+The last view make you able to schedule timelines on the televisions at specific dates.
 
 ### Viewer
 
-This is the front end which display timeline on televisions. It can be reach through a web browser too, which make this project usable for other purpose than only televisions. It will get timelines scheduled for its IP address and display them at the right date.
+This is the front end which display timeline on televisions. It can be reach through a web browser or by the android TV application which make this project usable for other purpose than only televisions.
+It will get timelines scheduled for the requesting IP address and display them at the right dates.
 
 ### Android TV application
 
@@ -23,14 +27,17 @@ You can install this application on your TV. It is a simple web view on the view
 
 ## Build and run
 
-The project is made of two front end in React, a Golang API, and work with a MYSQL Database, an S3 service such as Amazon Web Service S3 or minio.io, and a LDAP server. Both front-end and the back-end can be runned in a docker or build and runned locally. A docker-compose is provided too launch all part of the project, including an LDAP server, an minio.io server (S3) and a MYSQL server.
+The project is made of two front end in React, a Golang API, and work with a MYSQL Database, an S3 service such as Amazon Web Service S3 or minio.io, and a LDAP server.
+Both front-end and the back-end can be runned in a docker or build and runned locally. A docker-compose is provided too launch all part of the project, including an LDAP server, an minio.io server (S3) and a MYSQL server.
 
 ### Lazy deployment
 
 Run `docker-compose up --build` to build and run all part of this project.
 The admin panel will be reachable on `127.0.0.1:3000` and the viewer on `127.0.0.1:3042`.
+By launching it like this, the project will work locally only (on your machine).
+If you want to make it work on your network, you have to edit the docker compose file with the correct informations (replace environment variables for services), or run services locally as described below.
 
-A PHP interface for LDAP administration is provided too, reachable on `localhost:6443`.
+A PHP interface for LDAP administration is provided too with docker-compose, reachable on `localhost:6443`.
 By default, LDAP admin credentials are `cn=admin,dc=etixtv,dc=com` as username and `k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH` as password. You can change them by editing the docker compose file in the environment vars gave to the ldap-server service.
 It is also recommanded to change read only user credentials. Then, create a group and an the users you want to.
 ```
@@ -79,14 +86,29 @@ S3_PORT=9000
 S3_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT
 S3_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH
 ```
+go in the `api/` folder then
 
-then run `cd api && go build . && ./api`
+run `go build . && ./api`
 
 #### With docker
 
-run `cd api && docker build -t etix-api .`
+go in the `api/` folder then
 
-then from root `docker run -p 4242:4242 4244:4244 -e "DATABASE_URL=mysqldb" -e "DATABASE_PORT=3306" -e "DATABASE_USER=etix" -e "DATABASE_PASSWORD=HS4SFCA35UZHNW3YBHOT" -e "DATABASE_NAME=etixtv" -e "LDAP_URL=ldap" -e "LDAP_PORT=389" -e "LDAP_READONLY_USER_USERNAME=etix" -e "LDAP_READONLY_USER_PASSWORD=HS4SFCA35UZHNW3YBHOT" -e "LDAP_DOMAIN=etixtv.com" -e "S3_URL=mediaserver" -e "S3_PORT=9000" -e "S3_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT" -e "S3_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH" -v ./api:/go/src/etix-tv-manager/api`
+run `docker build -t etix-api .`
+
+then from root folder run
+```
+docker run -p 4242:4242 4244:4244 -e "DATABASE_URL=mysqldb" -e "DATABASE_PORT=3306"
+-e "DATABASE_USER=etix" -e "DATABASE_PASSWORD=HS4SFCA35UZHNW3YBHOT"
+-e "DATABASE_NAME=etixtv" -e "LDAP_URL=ldap"
+-e "LDAP_PORT=389" -e "LDAP_READONLY_USER_USERNAME=etix"
+-e "LDAP_READONLY_USER_PASSWORD=HS4SFCA35UZHNW3YBHOT" -e "LDAP_DOMAIN=etixtv.com"
+-e "S3_URL=mediaserver" -e "S3_PORT=9000"
+-e "S3_ACCESS_KEY=HS4SFCA35UZHNW3YBHOT" -e "S3_SECRET_KEY=k9gkHCeMqGB83TKgqIOn38KXmgfpaNEBgQTucXHH"
+-v ./api:/go/src/etix-tv-manager/api
+```
+
+You can (should) replace all environment variables values by yours.
 
 ### Build and run both front-end
 
@@ -107,15 +129,31 @@ then run in the front-end folder (admin-panel and/or viewer) `npm install . && n
 #### With docker
 
 ##### viewer
-run `cd viewer && docker build -t etix-viewer .`
-then from root `docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244" -e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080" -v ./viewer:/usr/src/app etix-viewer`
+
+go in the `viewer/` folder then
+
+run `docker build -t etix-viewer .`
+then from root run ```
+docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244"
+-e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080"
+-v ./viewer:/usr/src/app etix-viewer
+```
 
 ##### admin-panel
-run `cd admin-panel && docker build -t etix-admin-panel .`
-then from root `docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244" -e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080" -v ./admin-panel:/usr/src/app etix-admin-panel`
+
+go in the `admin-panel/` folder then
+
+run `docker build -t etix-admin-panel .`
+then from root run ```
+docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244"
+-e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080"
+-v ./admin-panel:/usr/src/app etix-admin-panel
+```
 
 
 ### Build android app
 
+go in the `androidApp/` folder then
+
 run `./build_and_sign.sh`
-It will generate the dpkg file.
+It will generate the dpkg file to install on your TV.
