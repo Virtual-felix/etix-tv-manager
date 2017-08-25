@@ -133,7 +133,8 @@ then run in the front-end folder (admin-panel and/or viewer) `npm install . && n
 go in the `viewer/` folder then
 
 run `docker build -t etix-viewer .`
-then from root run ```
+then from root run
+```
 docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244"
 -e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080"
 -v ./viewer:/usr/src/app etix-viewer
@@ -144,7 +145,8 @@ docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=
 go in the `admin-panel/` folder then
 
 run `docker build -t etix-admin-panel .`
-then from root run ```
+then from root run
+```
 docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244"
 -e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080"
 -v ./admin-panel:/usr/src/app etix-admin-panel
