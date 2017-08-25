@@ -182,29 +182,39 @@ export default class TelevisionsView extends Component {
     return (
       <div>
         <div style={sFormAddTv}>
-          <TextField
-            onChange={this.updateCreationName}
-            name={'newTvName'}
-            floatingLabelText={'Name'}
-            value={this.state.creationName}
-          />
-          <TextField
-            onChange={this.updateCreationIp}
-            name={'newTvIp'}
-            floatingLabelText={'Ip'}
-            value={this.state.creationIp}
-          />
-          <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <RaisedButton label="Create" onTouchTap={this.createTv} />
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <TextField
+              onChange={this.updateCreationName}
+              name={'newTvName'}
+              floatingLabelText={'Name'}
+              value={this.state.creationName}
+            />
           </div>
-          <TextField
-            onChange={this.updateCreationGroupName}
-            name={'newTvGroupName'}
-            floatingLabelText={'Groupe name'}
-            value={this.state.creationGroupName}
-          />
-          <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <RaisedButton label="Create Group" onTouchTap={this.createGroup} />
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <TextField
+              onChange={this.updateCreationIp}
+              name={'newTvIp'}
+              floatingLabelText={'Ip'}
+              value={this.state.creationIp}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-around', margin: 10 }}>
+            <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+              <RaisedButton label="Create" onTouchTap={this.createTv} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <TextField
+              onChange={this.updateCreationGroupName}
+              name={'newTvGroupName'}
+              floatingLabelText={'Groupe name'}
+              value={this.state.creationGroupName}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-around', margin: 10 }}>
+            <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+              <RaisedButton label="Create Group" onTouchTap={this.createGroup} />
+            </div>
           </div>
         </div>
         <Divider />
@@ -230,5 +240,5 @@ export default class TelevisionsView extends Component {
 const sFormAddTv = {
   width: '100%',
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
 };

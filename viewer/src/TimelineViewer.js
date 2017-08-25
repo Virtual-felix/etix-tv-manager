@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './TimelineViewer.css';
 import { Player } from 'video-react';
 import '../node_modules/video-react/dist/video-react.css';
+import NoItem from './notfound.gif';
 
 const BASE_URL =
   'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
@@ -30,11 +31,18 @@ export default class TimelineViewer extends Component {
       version: undefined,
       categories: [],
       index: 0,
+      empty: true,
     };
   }
 
   componentWillReceiveProps = nextProps => {
     var categories = [];
+    if (nextProps.items.length === 0) {
+      this.setState(state => {
+        return { empty: true };
+      });
+      return;
+    }
     const items = nextProps.items.map(item => {
       var arr = item.name.split('.');
       categories.push(item.category);
@@ -51,7 +59,7 @@ export default class TimelineViewer extends Component {
     const version = Date.now();
     this.setState(
       state => {
-        return { version: version, categories: categories };
+        return { version: version, categories: categories, empty: false };
       },
       () => {
         this.loop(0, items, version);
@@ -72,7 +80,7 @@ export default class TimelineViewer extends Component {
 
     setTimeout(() => {
       this.loop(index + 1, timeline, version);
-    }, parseInt(timeline[index].time) * 1000);
+    }, parseInt(timeline[index].time, 10) * 1000);
   };
 
   render() {
@@ -93,13 +101,16 @@ export default class TimelineViewer extends Component {
               })}
             </div>}
         </div>
-        {
+        {this.state.empty &&
+          <div style={{ width: '100%', margin: 'auto' }}>
+            <img src={NoItem} alt="no item" />
+          </div>}
+        {!this.state.empty &&
           <div style={{ top: 0, left: 0, zIndex: 0, width: '100%' }}>
             {this.state.img.type === 'mp4' || this.state.img.type === 'mkv'
               ? Video({ src: this.state.img.name, type: this.state.img.type })
               : Image({ src: this.state.img.name })}
-          </div>
-        }
+          </div>}
       </div>
     );
   }
