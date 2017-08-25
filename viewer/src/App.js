@@ -34,8 +34,6 @@ class App extends Component {
     };
   }
 
-  //2017-08-15T03:00:00Z
-
   componentWillMount = () => {
     this.refreshPlanifications();
     this.updateWorker();
@@ -44,6 +42,10 @@ class App extends Component {
   refreshPlanifications = () => {
     GetPlanifications()
       .then(response => {
+        if (response.data === '') {
+          return;
+        }
+        var selected = -1;
         for (var i = 0; i < response.data.length; i++) {
           const start = moment(response.data[i].startAt);
           const end = moment(response.data[i].endAt);
@@ -52,15 +54,18 @@ class App extends Component {
           if (start - now < 0 && end - now > 0) {
             if (
               this.state.selectedPlanification &&
-              response.data[i].id == this.state.selectedPlanification.id
+              response.data[i].id === this.state.selectedPlanification.id
             ) {
               break;
             }
-            this.setState(state => {
-              return { selectedPlanification: response.data[i] };
-            }, this.refreshTimelineItems);
+            selected = i;
             break;
           }
+        }
+        if (selected >= 0) {
+          this.setState(state => {
+            return { selectedPlanification: response.data[selected] };
+          }, this.refreshTimelineItems);
         }
       })
       .catch(error => {
@@ -89,7 +94,6 @@ class App extends Component {
     }
     GetTimeline(this.state.selectedPlanification.tiid)
       .then(response => {
-        console.log(response);
         this.setState(state => {
           return { summary: response.data.summary };
         });
@@ -107,7 +111,6 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state.items);
     return (
       <div className="App" style={sContainer}>
         <TimelineViewer items={this.state.items} summary={this.state.summary} />

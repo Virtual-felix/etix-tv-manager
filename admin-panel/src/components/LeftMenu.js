@@ -31,8 +31,17 @@ export default class LeftMenu extends Component {
   constructor(props) {
     super(props);
 
+    var selectedItem = 1;
+    if (window.location.pathname === '/') {
+      selectedItem = 1;
+    } else if (window.location.pathname === '/schedule') {
+      selectedItem = 2;
+    } else if (window.location.pathname === '/tv') {
+      selectedItem = 3;
+    }
+
     this._menuItems = props.menuItems.map(item => MenuItem(item));
-    this.state = { open: props.open, selectedItem: 1 };
+    this.state = { open: props.open, selectedItem: selectedItem };
   }
 
   changeActiveItem = (event, index) => {

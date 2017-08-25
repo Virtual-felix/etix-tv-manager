@@ -55,25 +55,56 @@ export default class LoginView extends Component {
 
   render() {
     return (
-      <div>
-        <TextField
-          onChange={this.updateLogin}
-          name={'Login'}
-          floatingLabelText={'Login'}
-          value={this.state.login}
-          errorText={this.state.errorText}
-        />
-        <TextField
-          onChange={this.updatePassword}
-          name={'Password'}
-          floatingLabelText={'Password'}
-          value={this.state.password}
-          type="password"
-        />
-        <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-          <RaisedButton label="Connect" onTouchTap={this.login} />
+      <div style={sContainer}>
+        <div />
+        <div style={sForm}>
+          <div>
+            <TextField
+              onChange={this.updateLogin}
+              name={'Login'}
+              floatingLabelText={'Login'}
+              value={this.state.login}
+              errorText={this.state.errorText}
+            />
+          </div>
+          <div style={{ height: 20 }} />
+          <div>
+            <TextField
+              onChange={this.updatePassword}
+              name={'Password'}
+              floatingLabelText={'Password'}
+              value={this.state.password}
+              type="password"
+            />
+          </div>
+          <div style={{ height: 20 }} />
+          <div>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+              <div />
+              <div>
+                <RaisedButton label="Connect" onTouchTap={this.login} />
+              </div>
+              <div />
+            </div>
+          </div>
         </div>
+        <div />
       </div>
     );
   }
 }
+
+// Inline styles
+
+const sContainer = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-around',
+  minHeight: '60vh',
+};
+
+const sForm = {
+  display: 'flex',
+  flexDirection: 'column',
+  margin: 'auto',
+};
