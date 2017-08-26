@@ -10,8 +10,7 @@ import HardwareRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import AppTheme from '../../constants/DesignApp.js';
 import VideoPng from './video.png';
 
-const BASE_URL =
-  'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
+const BASE_URL = process.env.REACT_APP_STATIC_URL;
 
 // Helper
 
