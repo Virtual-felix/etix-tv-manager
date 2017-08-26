@@ -57,10 +57,8 @@ You will have to replace the API and STATIC url gave to both front-end in the do
 
 ```
 environment:
-  - "REACT_APP_API_URL=127.0.0.1"
-  - "REACT_APP_API_PORT=4244"
-  - "REACT_APP_STATIC_URL=127.0.0.1"
-  - "REACT_APP_STATIC_PORT=8080"
+  - "REACT_APP_API_URL=http://127.0.0.1:4244"
+  - "REACT_APP_STATIC_URL=http://127.0.0.1:8080/"
 ```
 
 ### Build and run the API
@@ -118,10 +116,8 @@ You have to set the environment variables needed by the front-ends.
 
 Here are the default values.
 ```
-REACT_APP_API_URL=127.0.0.1
-REACT_APP_API_PORT=4244
-REACT_APP_STATIC_URL=127.0.0.1
-REACT_APP_STATIC_PORT=8080
+REACT_APP_API_URL=http://127.0.0.1:4244
+REACT_APP_STATIC_URL=http://127.0.0.1:8080/
 ```
 
 then run in the front-end folder (admin-panel and/or viewer) `npm install . && npm run start`
@@ -135,8 +131,8 @@ go in the `viewer/` folder then
 run `docker build -t etix-viewer .`
 then from root run
 ```
-docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244"
--e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080"
+docker run -p 3042:3000 -e "REACT_APP_API_URL=http://127.0.0.1:4244"
+-e "REACT_APP_STATIC_URL=http://127.0.0.1:8080/"
 -v ./viewer:/usr/src/app etix-viewer
 ```
 
@@ -147,8 +143,8 @@ go in the `admin-panel/` folder then
 run `docker build -t etix-admin-panel .`
 then from root run
 ```
-docker run -p 3042:3000 -e "REACT_APP_API_URL=127.0.0.1" -e "REACT_APP_API_PORT=4244"
--e "REACT_APP_STATIC_URL=127.0.0.1" -e "REACT_APP_STATIC_PORT=8080"
+docker run -p 3042:3000 -e "REACT_APP_API_URL=http://127.0.0.1:4244"
+-e "REACT_APP_STATIC_URL=http://127.0.0.1:8080/"
 -v ./admin-panel:/usr/src/app etix-admin-panel
 ```
 

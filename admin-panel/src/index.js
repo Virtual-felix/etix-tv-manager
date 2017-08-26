@@ -9,7 +9,7 @@ import './index.css';
 
 // Initialize the request client.
 window.httpClient = Axios.create({
-  baseURL: 'http://' + process.env.REACT_APP_API_URL + ':' + process.env.REACT_APP_API_PORT,
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 // Needed for onTouchTap

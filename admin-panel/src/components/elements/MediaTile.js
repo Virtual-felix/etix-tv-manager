@@ -12,8 +12,7 @@ import AppTheme from '../../constants/DesignApp.js';
 import './MediaTile.css';
 import VideoPng from './video.png';
 
-const BASE_URL =
-  'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
+const BASE_URL = process.env.REACT_APP_STATIC_URL;
 
 // Helper
 
