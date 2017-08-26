@@ -4,8 +4,7 @@ import { Player } from 'video-react';
 import '../node_modules/video-react/dist/video-react.css';
 import NoItem from './notfound.gif';
 
-const BASE_URL =
-  'http://' + process.env.REACT_APP_STATIC_URL + ':' + process.env.REACT_APP_STATIC_PORT + '/';
+const BASE_URL = process.env.REACT_APP_STATIC_URL;
 
 const Image = props => {
   return <img src={BASE_URL + props.src} alt={props.src} style={sImage} />;
