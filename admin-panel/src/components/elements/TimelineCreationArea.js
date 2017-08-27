@@ -120,6 +120,9 @@ export default class TimelineCreationArea extends Component {
   };
 
   onMoveLeftTile = item => {
+    if (item.index === 0) {
+      return;
+    }
     const leftItem = this.props.items[item.index - 1];
     this.updateTimelineItem(item.name, item.category, item.time, item.index - 1, item.id, item.tid);
     this.updateTimelineItem(
@@ -133,6 +136,9 @@ export default class TimelineCreationArea extends Component {
   };
 
   onMoveRightTile = item => {
+    if (item.index === this.props.items.length - 1) {
+      return;
+    }
     const rightItem = this.props.items[item.index + 1];
     this.updateTimelineItem(item.name, item.category, item.time, item.index + 1, item.id, item.tid);
     this.updateTimelineItem(
