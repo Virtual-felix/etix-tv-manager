@@ -93,6 +93,9 @@ export default class FilesView extends Component {
   };
 
   addFile = name => {
+    if (this.state.timelines.length === 0) {
+      return;
+    }
     AddFileToTimeline(
       this.state.timelines[this.state.selectedTimeline].id,
       name,
