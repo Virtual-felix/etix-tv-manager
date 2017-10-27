@@ -9,7 +9,6 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AppTheme from '../../constants/DesignApp.js';
-import './MediaTile.css';
 import VideoPng from './video.png';
 
 const BASE_URL = process.env.REACT_APP_STATIC_URL;
